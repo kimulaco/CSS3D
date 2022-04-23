@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/react'
-import { useStyleTranform, TranformObject } from '../../../utils/style'
+import {
+  useRotate,
+  stringifyTransform,
+  TranformObject,
+} from '../../../utils/transform'
+import { useDrag } from '../../../utils/drag'
 
 type CubePropsFace = {
   bg?: FlexProps['bg']
@@ -14,8 +19,6 @@ type CubeFaceProps = CubePropsFace & {
 }
 
 const CubeFace: React.FC<CubeFaceProps> = (props) => {
-  const { transform } = useStyleTranform()
-
   return (
     <Flex
       bg={props.bg}
@@ -27,7 +30,8 @@ const CubeFace: React.FC<CubeFaceProps> = (props) => {
       position={'absolute'}
       top={'0'}
       left={'0'}
-      transform={transform(props.transform)}
+      transform={stringifyTransform(props.transform)}
+      userSelect={'none'}
     >{ props.children }</Flex>
   )
 }
@@ -36,6 +40,7 @@ export type CubeProps = {
   width: number
   height: number
   depth: number
+  rotatable?: boolean
   bg?: BoxProps['bg']
   front?: CubePropsFace
   top?: CubePropsFace
@@ -47,21 +52,32 @@ export type CubeProps = {
 }
 
 export const Cube: React.FC<CubeProps> = (props) => {
-  const { transform } = useStyleTranform()
+  const { rotate, transformObject } = useRotate({
+    defaultState: {
+      rotateX: -30,
+      rotateY: -30,
+      rotateZ: 0,
+    },
+  })
+  const { isDragging, registerDrag } = useDrag({
+    onMoveDrag(moveOffset) {
+      rotate(moveOffset)
+    },
+  })
+
+  registerDrag()
 
   return (
     <Box
       width={`${props.width}px`}
       height={`${props.height}px`}
-      transform={transform({
-        rotateY: `-30deg`,
-        rotateX: `-30deg`,
-        rotateZ: `0deg`,
-      })}
+      cursor={isDragging ? 'grabbing' : 'grab'}
+      transform={stringifyTransform(transformObject)}
       style={{
         transformStyle: 'preserve-3d',
       }}
       {...props.chakra}
+      {...registerDrag()}
     >
       {/* front */}
       <CubeFace
@@ -69,8 +85,8 @@ export const Cube: React.FC<CubeProps> = (props) => {
         width={props.width}
         height={props.height}
         transform={{
-          rotateY: `0deg`,
           rotateX: `0deg`,
+          rotateY: `0deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
@@ -84,8 +100,8 @@ export const Cube: React.FC<CubeProps> = (props) => {
         width={props.width}
         height={props.depth}
         transform={{
-          rotateX: `90deg`,
           rotateY: `0deg`,
+          rotateX: `90deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `${props.height / 2}px`,

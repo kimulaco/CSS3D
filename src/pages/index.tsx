@@ -7,8 +7,12 @@ const PageHome: React.FC = () => {
     <Box>
       <Box
         bg="blackAlpha.800"
-        width="100vw"
-        height="100vw"
+        w={'100vw'}
+        maxW={'600px'}
+        h={'100vw'}
+        maxH={'600px'}
+        cursor={'grab'}
+        ml={'100px'}
         style={{
           perspective: '1000px',
         }}
