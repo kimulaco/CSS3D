@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, BoxProps, Flex, FlexProps } from '@chakra-ui/react'
 import {
   useRotate,
@@ -36,11 +36,65 @@ const CubeFace: React.FC<CubeFaceProps> = (props) => {
   )
 }
 
-export type CubeProps = {
+type CubeGuideProps = {
+  weight?: number
+  height?: number
+  color?: BoxProps['bg']
+}
+
+const CubeGuide: React.FC<CubeGuideProps> = ({
+  weight = 2,
+  height = 10000,
+  color = 'whiteAlpha.600',
+}) => {
+  const commonStyles: BoxProps = {
+    display: 'block',
+    bg: color,
+    w: `${weight}px`,
+    h: `${height}px`,
+    position: 'absolute',
+    left: '0',
+    top: `-${height / 2}px`,
+    zIndex: '12'
+  }
+
+  return (
+    <Box
+      w={`${weight}px`}
+      h={'100%'}
+      position={'absolute'}
+      top={'0'}
+      left={`calc(50% - ${weight / 2}px)`}
+      zIndex={11}
+      style={{
+        transformStyle: 'preserve-3d',
+      }}
+    >
+      <Box {...commonStyles} />
+      <Box
+        {...commonStyles}
+        transform={stringifyTransform({ rotateY: '45deg' })}
+      />
+      <Box
+        {...commonStyles}
+        transform={stringifyTransform({ rotateY: '90deg' })}
+      />
+      <Box
+        {...commonStyles}
+        transform={stringifyTransform({ rotateY: '135deg' })}
+      />
+    </Box>
+  )
+}
+
+type CubeProps = {
+  id: string
   width: number
   height: number
   depth: number
   rotatable?: boolean
+  isSelected?: boolean
+  enableGuide?: boolean
   bg?: BoxProps['bg']
   front?: CubePropsFace
   top?: CubePropsFace
@@ -73,6 +127,9 @@ export const Cube: React.FC<CubeProps> = (props) => {
       height={`${props.height}px`}
       cursor={isDragging ? 'grabbing' : 'grab'}
       transform={stringifyTransform(transformObject)}
+      willChange="transform"
+      position={'relative'}
+      zIndex={10}
       style={{
         transformStyle: 'preserve-3d',
       }}
@@ -90,7 +147,7 @@ export const Cube: React.FC<CubeProps> = (props) => {
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `${props.depth}px`,
+          translateZ: `${props.depth / 2}px`,
         }}
       >{ props.front?.children }</CubeFace>
 
@@ -104,7 +161,7 @@ export const Cube: React.FC<CubeProps> = (props) => {
           rotateX: `90deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
-          translateY: `${props.height / 2}px`,
+          translateY: `0px`,
           translateZ: `${props.depth / 2}px`,
         }}
       >{ props.top?.children }</CubeFace>
@@ -112,15 +169,15 @@ export const Cube: React.FC<CubeProps> = (props) => {
       {/* right */}
       <CubeFace
         bg={props.right?.bg || props.bg}
-        width={props.width}
-        height={props.depth}
+        width={props.depth}
+        height={props.height}
         transform={{
           rotateX: `0deg`,
           rotateY: `90deg`,
           rotateZ: `0deg`,
           translateY: `0px`,
-          translateX: `-${props.width / 2}px`,
-          translateZ: `${props.width / 2}px`,
+          translateX: `0px`,
+          translateZ: `${(props.width) - (props.depth / 2)}px`,
         }}
       >{ props.right?.children }</CubeFace>
 
@@ -134,23 +191,23 @@ export const Cube: React.FC<CubeProps> = (props) => {
           rotateY: `180deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
-          translateY: `${props.width / 2}px`,
-          translateZ: `${props.width / 2}px`,
+          translateY: `0px`,
+          translateZ: `${(props.height) - (props.depth / 2)}px`,
         }}
       >{ props.bottom?.children }</CubeFace>
 
       {/* left */}
       <CubeFace
         bg={props.left?.bg || props.bg}
-        width={props.width}
-        height={props.depth}
+        width={props.depth}
+        height={props.height}
         transform={{
           rotateX: `0deg`,
           rotateY: `-90deg`,
           rotateZ: `0deg`,
+          translateX: `0px`,
           translateY: `0px`,
-          translateX: `${props.width / 2}px`,
-          translateZ: `${props.width / 2}px`,
+          translateZ: `${props.depth / 2}px`,
         }}
       >{ props.left?.children }</CubeFace>
 
@@ -165,9 +222,14 @@ export const Cube: React.FC<CubeProps> = (props) => {
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `0px`,
+          translateZ: `${props.depth / 2}px`,
         }}
       >{ props.back?.children }</CubeFace>
+
+      {
+        props.enableGuide && (isDragging || props.isSelected) &&
+        <CubeGuide />
+      }
     </Box>
   )
 }
