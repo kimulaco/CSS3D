@@ -19,6 +19,8 @@ type CubeFaceProps = CubePropsFace & {
 }
 
 const CubeFace: React.FC<CubeFaceProps> = (props) => {
+  const TRANSITIONS: string[] = ['transform', 'width', 'height']
+
   return (
     <Flex
       bg={props.bg}
@@ -32,6 +34,8 @@ const CubeFace: React.FC<CubeFaceProps> = (props) => {
       left={'0'}
       transform={stringifyTransform(props.transform)}
       userSelect={'none'}
+      willChange={TRANSITIONS.join(',')}
+      transition={TRANSITIONS.map((propName) => `${propName} 0.3s`).join(',')}
     >{ props.children }</Flex>
   )
 }
@@ -88,7 +92,7 @@ const CubeGuide: React.FC<CubeGuideProps> = ({
 }
 
 type CubeProps = {
-  id: string
+  objectId: string
   width: number
   height: number
   depth: number
@@ -123,13 +127,14 @@ export const Cube: React.FC<CubeProps> = (props) => {
 
   return (
     <Box
+      id={props.objectId}
       width={`${props.width}px`}
       height={`${props.height}px`}
       cursor={isDragging ? 'grabbing' : 'grab'}
       transform={stringifyTransform(transformObject)}
-      willChange="transform"
       position={'relative'}
       zIndex={10}
+      willChange="transform"
       style={{
         transformStyle: 'preserve-3d',
       }}

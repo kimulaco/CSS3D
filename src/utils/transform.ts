@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Offset } from '../types/'
 
-// type transformProperty =
-//   'rotateY' |
-//   'rotateX' |
-//   'rotateZ' |
-//   'translateX' |
-//   'translateY' |
-//   'translateZ'
-
 export type TranformState = {
   [key: string]: number | string
 }

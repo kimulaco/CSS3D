@@ -35,7 +35,6 @@ export const useDrag = (props: UseDragProps) => {
     }
     updateIsDragging(true)
     updateMoveOffset(moveOffsetValue)
-    console.log(moveOffsetValue)
     if (props.onMoveDrag) {
       props.onMoveDrag(moveOffsetValue)
     }
@@ -43,26 +42,23 @@ export const useDrag = (props: UseDragProps) => {
 
   const startDrag = (event: MouseEvent): Offset => {
     startOffset = {x: event.pageX, y: event.pageY}
-    console.log('startDrag')
-    console.log(startOffset)
     updateIsDragging(true)
     updateMoveOffset({x: 0, y: 0})
     return startOffset
   }
 
-  const endDrag = (event: MouseEvent) => {
+  const endDrag = (event: MouseEvent): Offset => {
     const moveOffsetValue: Offset = {
       x: event.pageX - startOffset.x,
       y: event.pageY - startOffset.y,
     }
-    console.log('endDrag')
-    console.log(moveOffset)
     updateIsDragging(false)
     updateMoveOffset(moveOffsetValue)
     startOffset = {x: 0, y: 0}
     if (props.onEndDrag) {
       props.onEndDrag(moveOffsetValue)
     }
+    return moveOffset
   }
 
   const handleMouseUp = (event: MouseEvent) => {

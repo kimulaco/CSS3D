@@ -1,15 +1,37 @@
-import React from 'react'
-import { Flex, Box } from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { Box, Flex } from '@chakra-ui/react'
 import { Stage } from '../components/parts/Stage'
 import { Cube } from '../components/parts/Cube'
+import { ZoomController } from '../components/ui/ZoomController'
 import { ObjectMonitor } from '../components/ui/ObjectMonitor'
 
+type CubeSize = {
+  width: number
+  height: number
+  depth: number
+}
+
 const PageHome: React.FC = () => {
+  const [zoom, setZoom] = useState<number>(100)
+  const [cubeSize, setCubeSize] = useState<CubeSize>({
+    width: 100,
+    height: 100,
+    depth: 100,
+  })
+
+  const handleChangeObjectMonitor = (formId: string, value: number) => {
+    setCubeSize({
+      ...cubeSize,
+      [formId]: value,
+    })
+  }
+
   return (
     <Flex>
-      <Box>
+      <Box position={'relative'}>
         <Stage
-          perspective={1000}
+          zoom={zoom}
+          size={1000}
           chakra={{
             w: '50vw',
             maxW: '500px',
@@ -18,10 +40,10 @@ const PageHome: React.FC = () => {
           }}
         >
           <Cube
-            id="cube-1"
-            width={100}
-            height={100}
-            depth={100}
+            objectId="cube-1"
+            width={cubeSize.width}
+            height={cubeSize.height}
+            depth={cubeSize.depth}
             isSelected={true}
             front={{
               bg: 'red.600',
@@ -57,6 +79,11 @@ const PageHome: React.FC = () => {
             }}
           />
         </Stage>
+
+        <ZoomController
+          value={zoom}
+          onChange={setZoom}
+        />
       </Box>
 
       <ObjectMonitor
@@ -66,9 +93,8 @@ const PageHome: React.FC = () => {
           h: '50vw',
           maxH: '500px',
         }}
-      >
-        <p>ObjectMonitor</p>
-      </ObjectMonitor>
+        onChange={handleChangeObjectMonitor}
+      />
     </Flex>
   )
 }

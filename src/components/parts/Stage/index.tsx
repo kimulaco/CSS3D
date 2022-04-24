@@ -1,28 +1,58 @@
 import React from 'react'
 import { Box, BoxProps } from '@chakra-ui/react'
+import { stringifyTransform, formatTransform } from '../../../utils/transform'
+
+export type StageSize = number
 
 type StageProps = {
+  zoom?: number
+  size?: StageSize
   perspective?: number
   children?: React.ReactNode
   chakra?: BoxProps
 }
 
 export const Stage: React.FC<StageProps> = ({
-  perspective = 1000,
+  zoom = 100,
+  size = 3000,
+  perspective = 500,
   children,
   chakra,
 }) => {
   return (
     <Box
       bg="blackAlpha.800"
-      cursor={'grab'}
       position={'relative'}
-      zIndex={'0'}
+      zIndex={0}
       overflow={'hidden'}
-      style={{
-        perspective: `${perspective}px`,
-      }}
       {...chakra}
-    >{ children }</Box>
+    >
+      <Box
+        cursor={'grab'}
+        w={`${size}px`}
+        minW={`${size}px`}
+        h={`${size}px`}
+        minH={`${size}px`}
+        m={'auto'}
+        position={'absolute'}
+        top={`calc(50% - ${size / 2}px)`}
+        left={`calc(50% - ${size / 2}px)`}
+        zIndex={'0'}
+        overflow={'hidden'}
+        transformOrigin={'center center'}
+        transform={stringifyTransform(formatTransform({
+          scale: zoom / 100,
+          translateX: 0,
+          translateY: 0,
+        }))}
+        transition={'transform 0.3s'}
+        willChange={'transform'}
+        style={{
+          perspective: `${perspective}px`
+        }}
+      >
+        { children }
+      </Box>
+    </Box>
   )
 }
