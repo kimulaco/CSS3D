@@ -4,6 +4,8 @@ import { Stage } from '../components/parts/Stage'
 import { Cube } from '../components/parts/Cube'
 import { ZoomController } from '../components/ui/ZoomController'
 import { ObjectMonitor } from '../components/ui/ObjectMonitor'
+import { useProject } from '../state/project'
+import { ProjectObject } from '../types/project'
 
 type CubeSize = {
   width: number
@@ -12,12 +14,22 @@ type CubeSize = {
 }
 
 const PageHome: React.FC = () => {
+  const { project, addObject } = useProject();
   const [zoom, setZoom] = useState<number>(100)
   const [cubeSize, setCubeSize] = useState<CubeSize>({
     width: 100,
     height: 100,
     depth: 100,
   })
+
+  if (project.objects.length <= 0) {
+    addObject({
+      objectId: 'default-cube-1',
+      width: 100,
+      height: 100,
+      depth: 100,
+    })
+  }
 
   const handleChangeObjectMonitor = (formId: string, value: number) => {
     setCubeSize({
@@ -39,45 +51,30 @@ const PageHome: React.FC = () => {
             maxH: '500px',
           }}
         >
-          <Cube
-            objectId="cube-1"
-            width={cubeSize.width}
-            height={cubeSize.height}
-            depth={cubeSize.depth}
-            isSelected={true}
-            front={{
-              bg: 'red.600',
-              children: <p>Front</p>,
-            }}
-            top={{
-              bg: 'blue.600',
-              children: <p>Top</p>,
-            }}
-            right={{
-              bg: 'green.600',
-              children: <p>Right</p>,
-            }}
-            bottom={{
-              bg: 'yellow.600',
-              children: <p>Bottom</p>,
-            }}
-            left={{
-              bg: 'gray.600',
-              children: <p>Left</p>,
-            }}
-            back={{
-              bg: 'purple.600',
-              children: <p>Back</p>,
-            }}
-            chakra={{
-              position: 'absolute',
-              top: '0',
-              right: '0',
-              bottom: '0',
-              left: '0',
-              margin: 'auto',
-            }}
-          />
+          {project.objects.map((object: ProjectObject) => {
+            return (
+              <Cube
+                objectId={object.objectId}
+                width={object.width}
+                height={object.height}
+                depth={object.depth}
+                front={object.front}
+                top={object.top}
+                right={object.right}
+                bottom={object.bottom}
+                left={object.left}
+                back={object.back}
+                chakra={{
+                  position: 'absolute',
+                  top: '0',
+                  right: '0',
+                  bottom: '0',
+                  left: '0',
+                  margin: 'auto',
+                }}
+              />
+            )
+          })}
         </Stage>
 
         <ZoomController
