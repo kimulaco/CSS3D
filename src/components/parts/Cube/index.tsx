@@ -11,7 +11,6 @@ type CubeProps = {
   height: number
   depth: number
   rotatable?: boolean
-  isSelected?: boolean
   enableGuide?: boolean
   bg?: BoxProps['bg']
   front?: CubePropsOptions
@@ -42,11 +41,16 @@ export const Cube: React.FC<CubeProps> = (props) => {
   return (
     <Box
       id={props.objectId}
-      width={`${props.width}px`}
-      height={`${props.height}px`}
+      w={`${props.width}px`}
+      h={`${props.height}px`}
+      m={'auto'}
       cursor={isDragging ? 'grabbing' : 'grab'}
       transform={stringifyTransform(transformObject)}
-      position={'relative'}
+      position={'absolute'}
+      top={'0'}
+      right={'0'}
+      bottom={'0'}
+      left={'0'}
       zIndex={10}
       willChange="transform"
       style={{
@@ -158,7 +162,7 @@ export const Cube: React.FC<CubeProps> = (props) => {
       />
 
       {
-        props.enableGuide && (isDragging || props.isSelected) &&
+        props.enableGuide && (isDragging) &&
         <CubeGuide />
       }
     </Box>

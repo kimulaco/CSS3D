@@ -10,6 +10,7 @@ import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
 
 type ZoomControllerProps = {
   value: number
+  step?: number
   width?: number
   chakra?: FlexProps
   onChange?: (value: number) => void
@@ -17,6 +18,7 @@ type ZoomControllerProps = {
 
 export const ZoomController: React.FC<ZoomControllerProps> = ({
   value,
+  step = 10,
   chakra,
   onChange,
 }) => {
@@ -71,7 +73,7 @@ export const ZoomController: React.FC<ZoomControllerProps> = ({
         order={0}
         aria-label={'Zoom up'}
         icon={<ChevronUpIcon />}
-        onClick={() => handleChangeInput(value + 1)}
+        onClick={() => handleChangeInput(Math.min(value + step, MAX_VALUE))}
       />
       <IconButton
         isDisabled={value <= MIN_VALUE}
@@ -84,7 +86,7 @@ export const ZoomController: React.FC<ZoomControllerProps> = ({
         order={2}
         aria-label={'Zoom down'}
         icon={<ChevronDownIcon />}
-        onClick={() => handleChangeInput(value - 1)}
+        onClick={() => handleChangeInput(Math.max(value - step, MIN_VALUE))}
       />
     </Flex>
   )

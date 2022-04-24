@@ -17,6 +17,8 @@ export const CubeFace: React.FC<CubeFaceProps> = (props) => {
   return (
     <Flex
       bg={props.bg || 'gray.400'}
+      border={'1px solid'}
+      borderColor={props.borderColor || 'gray.500'}
       width={`${props.width}px`}
       height={`${props.height}px`}
       alignItems={'center'}

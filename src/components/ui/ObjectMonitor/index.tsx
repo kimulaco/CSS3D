@@ -2,25 +2,23 @@ import React from 'react'
 import {
   Box,
   BoxProps,
+  Flex,
+  Heading,
 } from '@chakra-ui/react'
-import { ObjectMonitorInput } from './Input'
 import { useForm } from 'react-hook-form'
-
-type FormValuesProps = {
-  width?: number
-  height?: number
-  depth?: number
-}
+import { ObjectMonitorInput } from './Input'
+import { ObjectMonitorSection } from './Section'
+import { ProjectObject } from '../../../types/project'
 
 type ObjectMonitorProps = {
-  defaultValues?: FormValuesProps
+  selectedObject: ProjectObject | undefined
   children?: React.ReactNode
   chakra?: BoxProps
-  onChange?: (formId: string, value: number) => void
+  onChange?: (updatedProject: ProjectObject) => void
 }
 
 export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
-  defaultValues = {},
+  selectedObject,
   children,
   chakra,
   onChange,
@@ -30,17 +28,25 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
       width: 100,
       height: 100,
       depth: 100,
-    }, defaultValues),
+    }, {}),
   })
 
   const handleChangeForm = (formId: string, value: number) => {
     if (typeof onChange === 'function') {
-      onChange(formId, value)
+      const updatedObject = {
+        ...selectedObject,
+        [formId]: value,
+      }
+      onChange(updatedObject as ProjectObject)
     }
   }
 
   const handleSubmitForm = (formValues: any) => {
     console.log(formValues)
+  }
+
+  if (!selectedObject) {
+    return (<></>)
   }
 
   return (
@@ -49,40 +55,52 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
       color={'white'}
       bg="gray.800"
       p={4}
+      overflow={'auto'}
       position={'relative'}
       zIndex={'0'}
       {...chakra}
       onSubmit={handleSubmit(handleSubmitForm)}
     >
-      <ObjectMonitorInput
-        formId={'width'}
-        label={'Width'}
-        input={{
-          type: 'number',
-          ...register('width', {}),
-        }}
-        onChange={handleChangeForm}
-      />
+      <Heading
+        as={'h2'}
+        display={'none'}
+      >Object Detail</Heading>
 
-      <ObjectMonitorInput
-        formId={'height'}
-        label={'Height'}
-        input={{
-          type: 'number',
-          ...register('height', {}),
-        }}
-        onChange={handleChangeForm}
-      />
+      <ObjectMonitorSection
+        heading={'Size'}
+      >
+        <Flex flexWrap={'wrap'}>
+          <ObjectMonitorInput
+            formId={'width'}
+            label={'Width'}
+            input={{
+              type: 'number',
+              ...register('width', {}),
+            }}
+            onChange={handleChangeForm}
+          />
 
-      <ObjectMonitorInput
-        formId={'depth'}
-        label={'Depth'}
-        input={{
-          type: 'number',
-          ...register('depth', {}),
-        }}
-        onChange={handleChangeForm}
-      />
+          <ObjectMonitorInput
+            formId={'height'}
+            label={'Height'}
+            input={{
+              type: 'number',
+              ...register('height', {}),
+            }}
+            onChange={handleChangeForm}
+          />
+
+          <ObjectMonitorInput
+            formId={'depth'}
+            label={'Depth'}
+            input={{
+              type: 'number',
+              ...register('depth', {}),
+            }}
+            onChange={handleChangeForm}
+          />
+        </Flex>
+      </ObjectMonitorSection>
     </Box>
   )
 }

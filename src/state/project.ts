@@ -13,6 +13,17 @@ export const projectState = atom<Project>({
 export const useProject = () => {
   const [project, setProject] = useRecoilState<Project>(projectState);
 
+  const getObjectById = (
+    objectId: ProjectObject['objectId'],
+  ): ProjectObject | undefined => {
+    for (const object of project.objects) {
+      if (object.objectId === objectId) {
+        return object
+      }
+    }
+    return undefined
+  }
+
   const addObject = (newProject: ProjectObject) => {
     setProject((project: Project) => {
       return {
@@ -24,8 +35,34 @@ export const useProject = () => {
     })
   }
 
+  const updateObject = (updatedObject: ProjectObject) => {
+    let isUpdatedObject = false
+
+    const projectObjects: ProjectObject[] = project.objects.map(
+      (object: ProjectObject) => {
+        if (object.objectId === updatedObject.objectId) {
+          isUpdatedObject = true
+          return updatedObject
+        }
+        return object
+      }
+    )
+
+    if (!isUpdatedObject) {
+      return
+    }
+
+    setProject((project: Project) => {
+      return {
+        objects: projectObjects,
+      }
+    })
+  }
+
   return {
     project,
+    getObjectById,
     addObject,
+    updateObject,
   }
 }

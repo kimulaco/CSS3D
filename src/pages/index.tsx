@@ -14,28 +14,31 @@ type CubeSize = {
 }
 
 const PageHome: React.FC = () => {
-  const { project, addObject } = useProject();
+  const { project, addObject, updateObject } = useProject();
   const [zoom, setZoom] = useState<number>(100)
-  const [cubeSize, setCubeSize] = useState<CubeSize>({
+  const [cubeSize] = useState<CubeSize>({
     width: 100,
     height: 100,
     depth: 100,
   })
+  const [
+    selectedObject,
+    setSelectedObject,
+  ] = useState<ProjectObject | undefined>(undefined)
 
   if (project.objects.length <= 0) {
-    addObject({
+    const newObject: ProjectObject = {
       objectId: 'default-cube-1',
       width: 100,
       height: 100,
       depth: 100,
-    })
+    }
+    addObject(newObject)
+    setSelectedObject(newObject)
   }
 
-  const handleChangeObjectMonitor = (formId: string, value: number) => {
-    setCubeSize({
-      ...cubeSize,
-      [formId]: value,
-    })
+  const handleChangeObjectMonitor = (updatedObject: ProjectObject) => {
+    updateObject(updatedObject)
   }
 
   return (
@@ -54,6 +57,7 @@ const PageHome: React.FC = () => {
           {project.objects.map((object: ProjectObject) => {
             return (
               <Cube
+                key={`object-${object.objectId}`}
                 objectId={object.objectId}
                 width={object.width}
                 height={object.height}
@@ -64,14 +68,6 @@ const PageHome: React.FC = () => {
                 bottom={object.bottom}
                 left={object.left}
                 back={object.back}
-                chakra={{
-                  position: 'absolute',
-                  top: '0',
-                  right: '0',
-                  bottom: '0',
-                  left: '0',
-                  margin: 'auto',
-                }}
               />
             )
           })}
@@ -84,6 +80,7 @@ const PageHome: React.FC = () => {
       </Box>
 
       <ObjectMonitor
+        selectedObject={selectedObject}
         chakra={{
           w: '50vw',
           maxW: '500px',

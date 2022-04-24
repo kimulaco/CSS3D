@@ -25,14 +25,17 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
 }) => {
   return (
     <FormControl
-      mb={3}
+      w={'calc(100% / 3)'}
+      pr={3}
       {...chakra}
     >
       <Flex alignItems={'center'}>
         <FormLabel
           htmlFor={formId}
-          minW={'50px'}
+          minW={'45px'}
           mb={'0'}
+          mr={2}
+          fontSize={'sm'}
         >{label}</FormLabel>
 
         <Input
@@ -40,8 +43,8 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
           bg={'white'}
           color={'black'}
           w={'auto'}
-          maxW={20}
-          h={7}
+          maxW={16}
+          h={6}
           px={2}
           textAlign={'right'}
           {...input}
