@@ -45,9 +45,7 @@ export const Cube: React.FC<CubeProps> = ({
     if (typeof onChangeRotate === 'function') {
       onChangeRotate(updatedObject)
     }
-  }, [rotateState])
-
-  registerDrag()
+  }, [])
 
   return (
     <Box

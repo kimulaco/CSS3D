@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Box, Flex } from '@chakra-ui/react'
+import React, { useState, useEffect } from 'react'
+import { Box, Flex, IconButton } from '@chakra-ui/react'
+import { AiOutlineSave } from 'react-icons/ai'
 import { Stage } from '../components/parts/Stage'
 import { Cube } from '../components/parts/Cube'
 import { ZoomController } from '../components/ui/ZoomController'
@@ -8,25 +9,12 @@ import { useProject } from '../state/project'
 import { ProjectObject } from '../types/project'
 
 const PageHome: React.FC = () => {
-  const { project, addObject, updateObject } = useProject();
+  const { project, addObject, updateObject, setStorage } = useProject();
   const [zoom, setZoom] = useState<number>(100)
   const [
     selectedObject,
     setSelectedObject,
   ] = useState<ProjectObject | undefined>(undefined)
-
-  if (project.objects.length <= 0) {
-    const newObject: ProjectObject = {
-      objectId: 'default-cube-1',
-      width: 100,
-      height: 100,
-      depth: 100,
-      rotateX: -20,
-      rotateY: -20,
-    }
-    addObject(newObject)
-    setSelectedObject(newObject)
-  }
 
   const handleChangeObject = (updatedObject: ProjectObject) => {
     updateObject(updatedObject)
@@ -34,6 +22,23 @@ const PageHome: React.FC = () => {
       setSelectedObject(updatedObject)
     }
   }
+
+  useEffect(() => {
+    if (project.objects.length > 0) {
+      setSelectedObject(project.objects[0])
+    } else {
+      const newObject: ProjectObject = {
+        objectId: 'default-cube-1',
+        width: 100,
+        height: 100,
+        depth: 100,
+        rotateX: -20,
+        rotateY: -20,
+      }
+      addObject(newObject)
+      setSelectedObject(newObject)
+    }
+  }, [])
 
   return (
     <Flex>
@@ -58,6 +63,21 @@ const PageHome: React.FC = () => {
             )
           })}
         </Stage>
+
+        <IconButton
+          aria-label="Save Project"
+          icon={<AiOutlineSave style={{
+            width: '100%',
+            height: '100%',
+            fill: 'currentcolor',
+          }} />}
+          p={2}
+          position={'absolute'}
+          top={4}
+          right={4}
+          zIndex={'0'}
+          onClick={setStorage}
+        />
 
         <ZoomController
           value={zoom}
