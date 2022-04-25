@@ -12,6 +12,8 @@ export type ProjectObject = {
   width: number
   height: number
   depth: number
+  rotateX: number
+  rotateY: number
   bg?: ChakraProps['bg'],
   borderColor?: ChakraProps['borderColor'],
   front?: ProjectObjectFace

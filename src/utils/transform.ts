@@ -33,6 +33,16 @@ export const stringifyTransform = (transformObject: TranformObject): string => {
     .join(' ')
 }
 
+export const stringifyFormatTransform = (
+  transformState: TranformState,
+): string => {
+  return stringifyTransform(formatTransform(transformState))
+}
+
+export const optimizeRotate = (rotateValue: number): number => {
+  return rotateValue % 360
+}
+
 type UseRotateProps = {
   rotateRate?: number
   defaultState?: TranformState
@@ -66,6 +76,7 @@ export const useRotate = ({
 
   return {
     rotate,
+    rotateState,
     transformObject,
   }
 }

@@ -7,20 +7,9 @@ import { ObjectMonitor } from '../components/ui/ObjectMonitor'
 import { useProject } from '../state/project'
 import { ProjectObject } from '../types/project'
 
-type CubeSize = {
-  width: number
-  height: number
-  depth: number
-}
-
 const PageHome: React.FC = () => {
   const { project, addObject, updateObject } = useProject();
   const [zoom, setZoom] = useState<number>(100)
-  const [cubeSize] = useState<CubeSize>({
-    width: 100,
-    height: 100,
-    depth: 100,
-  })
   const [
     selectedObject,
     setSelectedObject,
@@ -32,13 +21,18 @@ const PageHome: React.FC = () => {
       width: 100,
       height: 100,
       depth: 100,
+      rotateX: -20,
+      rotateY: -20,
     }
     addObject(newObject)
     setSelectedObject(newObject)
   }
 
-  const handleChangeObjectMonitor = (updatedObject: ProjectObject) => {
+  const handleChangeObject = (updatedObject: ProjectObject) => {
     updateObject(updatedObject)
+    if (updatedObject.objectId === selectedObject?.objectId) {
+      setSelectedObject(updatedObject)
+    }
   }
 
   return (
@@ -58,16 +52,8 @@ const PageHome: React.FC = () => {
             return (
               <Cube
                 key={`object-${object.objectId}`}
-                objectId={object.objectId}
-                width={object.width}
-                height={object.height}
-                depth={object.depth}
-                front={object.front}
-                top={object.top}
-                right={object.right}
-                bottom={object.bottom}
-                left={object.left}
-                back={object.back}
+                object={object}
+                onChangeRotate={handleChangeObject}
               />
             )
           })}
@@ -87,7 +73,7 @@ const PageHome: React.FC = () => {
           h: '50vw',
           maxH: '500px',
         }}
-        onChange={handleChangeObjectMonitor}
+        onChange={handleChangeObject}
       />
     </Flex>
   )

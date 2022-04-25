@@ -1,32 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { CubeGuide } from './CubeGuide'
-import { CubeFace, CubePropsOptions } from './CubeFace'
-import { useRotate, stringifyTransform } from '../../../utils/transform'
+import { CubeFace } from './CubeFace'
+import {
+  useRotate,
+  stringifyFormatTransform,
+} from '../../../utils/transform'
 import { useDrag } from '../../../utils/drag'
+import { isNumber } from '../../../utils/number'
+import { ProjectObject } from '../../../types/project'
 
 type CubeProps = {
-  objectId: string
-  width: number
-  height: number
-  depth: number
-  rotatable?: boolean
+  object: ProjectObject
   enableGuide?: boolean
-  bg?: BoxProps['bg']
-  front?: CubePropsOptions
-  top?: CubePropsOptions
-  right?: CubePropsOptions
-  bottom?: CubePropsOptions
-  left?: CubePropsOptions
-  back?: CubePropsOptions
   chakra?: BoxProps
+  onChangeRotate: (updatedObject: ProjectObject) => void
 }
 
-export const Cube: React.FC<CubeProps> = (props) => {
-  const { rotate, transformObject } = useRotate({
+export const Cube: React.FC<CubeProps> = ({
+  object,
+  enableGuide = false,
+  chakra = {},
+  onChangeRotate,
+}) => {
+  const { rotateState, rotate } = useRotate({
     defaultState: {
-      rotateX: -30,
-      rotateY: -30,
+      rotateX: isNumber(object.rotateX) ? object.rotateX : -20,
+      rotateY: isNumber(object.rotateY) ? object.rotateY : -20,
       rotateZ: 0,
     },
   })
@@ -36,16 +36,30 @@ export const Cube: React.FC<CubeProps> = (props) => {
     },
   })
 
+  useEffect(() => {
+    const updatedObject: ProjectObject = {
+      ...object,
+      rotateX: Number(rotateState.rotateX),
+      rotateY: Number(rotateState.rotateY),
+    }
+    if (typeof onChangeRotate === 'function') {
+      onChangeRotate(updatedObject)
+    }
+  }, [rotateState])
+
   registerDrag()
 
   return (
     <Box
-      id={props.objectId}
-      w={`${props.width}px`}
-      h={`${props.height}px`}
+      id={object.objectId}
+      w={`${object.width}px`}
+      h={`${object.height}px`}
       m={'auto'}
       cursor={isDragging ? 'grabbing' : 'grab'}
-      transform={stringifyTransform(transformObject)}
+      transform={stringifyFormatTransform({
+        rotateX: object.rotateX,
+        rotateY: object.rotateY,
+      })}
       position={'absolute'}
       top={'0'}
       right={'0'}
@@ -56,113 +70,113 @@ export const Cube: React.FC<CubeProps> = (props) => {
       style={{
         transformStyle: 'preserve-3d',
       }}
-      {...props.chakra}
+      {...chakra}
       {...registerDrag()}
     >
       {/* front */}
       <CubeFace
-        bg={props.front?.bg || props.bg}
-        text={props.front?.text}
-        img={props.front?.img}
-        width={props.width}
-        height={props.height}
+        bg={object.front?.bg || object.bg}
+        text={object.front?.text}
+        img={object.front?.img}
+        width={object.width}
+        height={object.height}
         transform={{
           rotateX: `0deg`,
           rotateY: `0deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `${props.depth / 2}px`,
+          translateZ: `${object.depth / 2}px`,
         }}
       />
 
       {/* top */}
       <CubeFace
-        bg={props.top?.bg || props.bg}
-        text={props.top?.text}
-        img={props.top?.img}
-        width={props.width}
-        height={props.depth}
+        bg={object.top?.bg || object.bg}
+        text={object.top?.text}
+        img={object.top?.img}
+        width={object.width}
+        height={object.depth}
         transform={{
           rotateY: `0deg`,
           rotateX: `90deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `${props.depth / 2}px`,
+          translateZ: `${object.depth / 2}px`,
         }}
       />
 
       {/* right */}
       <CubeFace
-        bg={props.right?.bg || props.bg}
-        text={props.right?.text}
-        img={props.right?.img}
-        width={props.depth}
-        height={props.height}
+        bg={object.right?.bg || object.bg}
+        text={object.right?.text}
+        img={object.right?.img}
+        width={object.depth}
+        height={object.height}
         transform={{
           rotateX: `0deg`,
           rotateY: `90deg`,
           rotateZ: `0deg`,
           translateY: `0px`,
           translateX: `0px`,
-          translateZ: `${(props.width) - (props.depth / 2)}px`,
+          translateZ: `${(object.width) - (object.depth / 2)}px`,
         }}
       />
 
       {/* bottom */}
       <CubeFace
-        bg={props.bottom?.bg || props.bg}
-        text={props.bottom?.text}
-        img={props.bottom?.img}
-        width={props.width}
-        height={props.depth}
+        bg={object.bottom?.bg || object.bg}
+        text={object.bottom?.text}
+        img={object.bottom?.img}
+        width={object.width}
+        height={object.depth}
         transform={{
           rotateX: `90deg`,
           rotateY: `180deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `${(props.height) - (props.depth / 2)}px`,
+          translateZ: `${(object.height) - (object.depth / 2)}px`,
         }}
       />
 
       {/* left */}
       <CubeFace
-        bg={props.left?.bg || props.bg}
-        text={props.left?.text}
-        img={props.left?.img}
-        width={props.depth}
-        height={props.height}
+        bg={object.left?.bg || object.bg}
+        text={object.left?.text}
+        img={object.left?.img}
+        width={object.depth}
+        height={object.height}
         transform={{
           rotateX: `0deg`,
           rotateY: `-90deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `${props.depth / 2}px`,
+          translateZ: `${object.depth / 2}px`,
         }}
       />
 
       {/* back */}
       <CubeFace
-        bg={props.back?.bg || props.bg}
-        text={props.back?.text}
-        img={props.back?.img}
-        width={props.width}
-        height={props.height}
+        bg={object.back?.bg || object.bg}
+        text={object.back?.text}
+        img={object.back?.img}
+        width={object.width}
+        height={object.height}
         transform={{
           rotateX: `0deg`,
           rotateY: `180deg`,
           rotateZ: `0deg`,
           translateX: `0px`,
           translateY: `0px`,
-          translateZ: `${props.depth / 2}px`,
+          translateZ: `${object.depth / 2}px`,
         }}
       />
 
       {
-        props.enableGuide && (isDragging) &&
+        enableGuide && (isDragging) &&
         <CubeGuide />
       }
     </Box>

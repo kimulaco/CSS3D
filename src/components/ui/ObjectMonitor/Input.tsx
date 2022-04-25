@@ -25,7 +25,6 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
 }) => {
   return (
     <FormControl
-      w={'calc(100% / 3)'}
       pr={3}
       {...chakra}
     >
