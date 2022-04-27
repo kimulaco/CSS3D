@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { CubeGuide } from './CubeGuide'
 import { CubeFace } from './CubeFace'
-import {
-  stringifyFormatTransform,
-} from '../../../utils/transform'
-import { useRotate } from '../../../utils/useRotate'
+import { stringifyFormatTransform } from '../../../utils/transform'
 import { isNumber } from '../../../utils/number'
+import { useRotate } from '../../../utils/useRotate'
 import { ProjectObject } from '../../../types/project'
 
 type CubeProps = {
@@ -22,24 +20,23 @@ export const Cube: React.FC<CubeProps> = ({
   chakra = {},
   onChangeRotate,
 }) => {
-  const { registDrag, isDragging, rotateState } = useRotate({
+  const { registDrag, isDragging } = useRotate({
     defaultState: {
       rotateX: isNumber(object.rotateX) ? object.rotateX : -20,
       rotateY: isNumber(object.rotateY) ? object.rotateY : -20,
       rotateZ: 0,
     },
+    onRotate(rotateState) {
+      const updatedObject: ProjectObject = {
+        ...object,
+        rotateX: Number(rotateState.rotateX),
+        rotateY: Number(rotateState.rotateY),
+      }
+      if (typeof onChangeRotate === 'function') {
+        onChangeRotate(updatedObject)
+      }
+    }
   })
-
-  useEffect(() => {
-    const updatedObject: ProjectObject = {
-      ...object,
-      rotateX: Number(rotateState.rotateX),
-      rotateY: Number(rotateState.rotateY),
-    }
-    if (typeof onChangeRotate === 'function') {
-      onChangeRotate(updatedObject)
-    }
-  }, [rotateState])
 
   return (
     <Box

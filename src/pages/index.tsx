@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Box, Flex, IconButton } from '@chakra-ui/react'
 import { AiOutlineSave } from 'react-icons/ai'
 import { Stage } from '../components/parts/Stage'
@@ -14,7 +14,7 @@ const PageHome: React.FC = () => {
   const [
     selectedObject,
     setSelectedObject,
-  ] = useState<ProjectObject | undefined>(undefined)
+  ] = useState<ProjectObject | undefined>(project.objects[0])
 
   const handleChangeObject = (updatedObject: ProjectObject) => {
     updateObject(updatedObject)
@@ -22,12 +22,6 @@ const PageHome: React.FC = () => {
       setSelectedObject(updatedObject)
     }
   }
-
-  useEffect(() => {
-    if (project.objects.length > 0) {
-      setSelectedObject(project.objects[0])
-    }
-  }, [])
 
   return (
     <Flex>

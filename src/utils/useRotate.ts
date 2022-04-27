@@ -6,11 +6,13 @@ import { Offset } from '../types/'
 type UseRotateProps = {
   rotateRate?: number
   defaultState?: TranformState
+  onRotate?: (rotateState: TranformState) => void
 }
 
 export const useRotate = ({
   rotateRate = 0.5,
   defaultState = {},
+  onRotate,
 }: UseRotateProps) => {
   const [
     stateRotateState,
@@ -32,11 +34,15 @@ export const useRotate = ({
       x: moveOffset.x - startOffset.x,
       y: moveOffset.y - startOffset.y,
     }
-    setRotateState({
+    const state: TranformState = {
       rotateX: Number(stateRotateState.rotateX) - (diffOffsetValue.y * rate),
       rotateY: Number(stateRotateState.rotateY) + (diffOffsetValue.x * rate),
       rotateZ: Number(stateRotateState.rotateZ),
-    })
+    }
+    setRotateState(state)
+    if (typeof onRotate === 'function') {
+      onRotate(state)
+    }
   }
 
   const { isDragging, registDrag } = useDrag({

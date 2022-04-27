@@ -64,8 +64,8 @@ export const useDrag = (props: UseDragProps) => {
     }
   }
 
-  useWindowEvent('mouseup', handleMouseUp, [])
-  useWindowEvent('mousemove', handleMouseMove, [])
+  useWindowEvent('mouseup', handleMouseUp)
+  useWindowEvent('mousemove', handleMouseMove)
 
   return {
     // state
