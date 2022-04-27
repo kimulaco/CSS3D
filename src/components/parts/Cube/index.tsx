@@ -3,10 +3,9 @@ import { Box, BoxProps } from '@chakra-ui/react'
 import { CubeGuide } from './CubeGuide'
 import { CubeFace } from './CubeFace'
 import {
-  useRotate,
   stringifyFormatTransform,
 } from '../../../utils/transform'
-import { useDrag } from '../../../utils/drag'
+import { useRotate } from '../../../utils/useRotate'
 import { isNumber } from '../../../utils/number'
 import { ProjectObject } from '../../../types/project'
 
@@ -23,16 +22,11 @@ export const Cube: React.FC<CubeProps> = ({
   chakra = {},
   onChangeRotate,
 }) => {
-  const { rotateState, rotate } = useRotate({
+  const { registDrag, isDragging, rotateState } = useRotate({
     defaultState: {
       rotateX: isNumber(object.rotateX) ? object.rotateX : -20,
       rotateY: isNumber(object.rotateY) ? object.rotateY : -20,
       rotateZ: 0,
-    },
-  })
-  const { isDragging, registerDrag } = useDrag({
-    onMoveDrag(moveOffset) {
-      rotate(moveOffset)
     },
   })
 
@@ -45,7 +39,7 @@ export const Cube: React.FC<CubeProps> = ({
     if (typeof onChangeRotate === 'function') {
       onChangeRotate(updatedObject)
     }
-  }, [])
+  }, [rotateState])
 
   return (
     <Box
@@ -69,7 +63,7 @@ export const Cube: React.FC<CubeProps> = ({
         transformStyle: 'preserve-3d',
       }}
       {...chakra}
-      {...registerDrag()}
+      onMouseDown={registDrag}
     >
       {/* front */}
       <CubeFace

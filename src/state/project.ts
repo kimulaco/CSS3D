@@ -5,9 +5,18 @@ const ATOM_KEY = 'project'
 const PROJECT_ID_STORAGE_KEY = 'CSS3D_PROJECT_ID'
 const PROJECT_STORAGE_PREFIX = 'CSS3D_PROJECT_'
 
+const DEFAULT_PROJECT_OBJECT: ProjectObject = {
+  objectId: 'default-object-1',
+  width: 100,
+  height: 100,
+  depth: 100,
+  rotateX: -20,
+  rotateY: -20,
+}
+
 const DEFAULT_PROJECT: Project = {
   id: 'default-project-1',
-  objects: [],
+  objects: [DEFAULT_PROJECT_OBJECT],
 }
 
 const getDefaultProject = (): Project => {

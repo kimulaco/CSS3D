@@ -9,7 +9,7 @@ import { useProject } from '../state/project'
 import { ProjectObject } from '../types/project'
 
 const PageHome: React.FC = () => {
-  const { project, addObject, updateObject, setStorage } = useProject();
+  const { project, updateObject, setStorage } = useProject()
   const [zoom, setZoom] = useState<number>(100)
   const [
     selectedObject,
@@ -26,17 +26,6 @@ const PageHome: React.FC = () => {
   useEffect(() => {
     if (project.objects.length > 0) {
       setSelectedObject(project.objects[0])
-    } else {
-      const newObject: ProjectObject = {
-        objectId: 'default-cube-1',
-        width: 100,
-        height: 100,
-        depth: 100,
-        rotateX: -20,
-        rotateY: -20,
-      }
-      addObject(newObject)
-      setSelectedObject(newObject)
     }
   }, [])
 
