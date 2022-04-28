@@ -16,6 +16,7 @@ const DEFAULT_PROJECT_OBJECT: ProjectObject = {
 
 const DEFAULT_PROJECT: Project = {
   id: 'default-project-1',
+  perspective: 500,
   objects: [DEFAULT_PROJECT_OBJECT],
 }
 
@@ -58,6 +59,7 @@ export const useProject = () => {
     setProject((project: Project) => {
       return {
         id: project.id,
+        perspective: project.perspective,
         objects: [
           ...project.objects,
           newProject,
@@ -86,6 +88,7 @@ export const useProject = () => {
     setProject((project: Project) => {
       return {
         id: project.id,
+        perspective: project.perspective,
         objects: projectObjects,
       }
     })

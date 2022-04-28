@@ -21,14 +21,15 @@ export const Stage: React.FC<StageProps> = ({
 }) => {
   return (
     <Box
-      bg="blackAlpha.800"
+      bg="gray.700"
+      w={'100%'}
+      h={'100%'}
       position={'relative'}
       zIndex={0}
       overflow={'hidden'}
       {...chakra}
     >
       <Box
-        cursor={'grab'}
         w={`${size}px`}
         minW={`${size}px`}
         h={`${size}px`}

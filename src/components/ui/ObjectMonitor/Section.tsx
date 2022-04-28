@@ -14,23 +14,18 @@ export const ObjectMonitorSection: React.FC<ObjectMonitorSectionProps> = ({
   return (
   <Box
     as="section"
-    p={2}
-    pb={4}
-    mt={4}
-    border={'1px'}
-    borderRadius={'sm'}
+    pb={'4'}
     _first={{
       mt: '0',
+      borderTop: '0',
     }}
   >
     <Heading
       as={'h3'}
-      size={'sm'}
-      pb={2}
-      mb={4}
-      borderBottom={'1px'}
+      size={'xs'}
+      p={'2'}
     >{heading}</Heading>
-    <Box>
+    <Box px={'3'}>
       {children}
     </Box>
   </Box>

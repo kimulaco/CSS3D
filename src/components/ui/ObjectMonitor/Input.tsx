@@ -1,7 +1,13 @@
 import React from 'react'
 import {
+  Box,
   Flex,
-  Input,
+  NumberInput,
+  NumberInputProps,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
   InputProps,
   FormControl,
   FormControlProps,
@@ -11,24 +17,24 @@ import {
 type ObjectMonitorInputProps = {
   formId: string
   label: string
-  input?: InputProps
+  unit?: string
+  input?: NumberInputProps
   chakra?: FormControlProps
+  inputChakra?: InputProps
   onChange?: (formId: string, value: number) => void
 }
 
 export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
   formId,
   label = '',
+  unit = '',
   input,
   chakra,
   onChange,
 }) => {
   return (
-    <FormControl
-      pr={3}
-      {...chakra}
-    >
-      <Flex alignItems={'center'}>
+    <FormControl mt={'1'} {...chakra}>
+      <Flex alignItems={'center'} w={'100%'}>
         <FormLabel
           htmlFor={formId}
           minW={'45px'}
@@ -37,22 +43,37 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
           fontSize={'sm'}
         >{label}</FormLabel>
 
-        <Input
-          id={formId}
-          bg={'white'}
-          color={'black'}
-          w={'auto'}
-          maxW={16}
-          h={6}
-          px={2}
-          textAlign={'right'}
+        <NumberInput
+          size={'xs'}
+          isFullWidth
           {...input}
-          onChange={(event) => {
+          onChange={(value: string) => {
             if (typeof onChange === 'function') {
-              onChange(formId, Number(event.target.value))
+              onChange(formId, Number(value))
             }
           }}
-        />
+        >
+          <NumberInputField
+            id={formId}
+            bg={'white'}
+            color={'black'}
+            w={'100%'}
+            px={2}
+            borderRadius={'sm'}
+            textAlign={'right'}
+          />
+          <NumberInputStepper>
+            <NumberIncrementStepper color={'gray.800'} />
+            <NumberDecrementStepper color={'gray.800'} />
+          </NumberInputStepper>
+        </NumberInput>
+
+        <Box
+          minW={'36px'}
+          pl={2}
+        >
+          {unit}
+        </Box>
       </Flex>
     </FormControl>
   )

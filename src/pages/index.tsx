@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, IconButton } from '@chakra-ui/react'
+import { Box, Flex, IconButton, useToast } from '@chakra-ui/react'
 import { AiOutlineSave } from 'react-icons/ai'
 import { Stage } from '../components/parts/Stage'
 import { Cube } from '../components/parts/Cube'
@@ -8,7 +8,10 @@ import { ObjectMonitor } from '../components/ui/ObjectMonitor'
 import { useProject } from '../state/project'
 import { ProjectObject } from '../types/project'
 
+const rightWidth = 200
+
 const PageHome: React.FC = () => {
+  const toast = useToast()
   const { project, updateObject, setStorage } = useProject()
   const [zoom, setZoom] = useState<number>(100)
   const [
@@ -23,18 +26,27 @@ const PageHome: React.FC = () => {
     }
   }
 
+  const handleClickSaveButton = () => {
+    setStorage()
+    toast({
+      description: 'Saved',
+      status: 'success',
+      position: 'top-right',
+      duration: 3000,
+      isClosable: true,
+    })
+  }
+
   return (
-    <Flex>
-      <Box position={'relative'}>
+    <Flex minH={'100vh'} bg={'gray.900'}>
+      <Box
+        w={`calc(100% - ${rightWidth}px)`}
+        h={'100vh'}
+        position={'relative'}
+      >
         <Stage
           zoom={zoom}
           size={1000}
-          chakra={{
-            w: '50vw',
-            maxW: '500px',
-            h: '50vw',
-            maxH: '500px',
-          }}
         >
           {project.objects.map((object: ProjectObject) => {
             return (
@@ -59,7 +71,7 @@ const PageHome: React.FC = () => {
           top={4}
           right={4}
           zIndex={'0'}
-          onClick={setStorage}
+          onClick={handleClickSaveButton}
         />
 
         <ZoomController
@@ -71,10 +83,9 @@ const PageHome: React.FC = () => {
       <ObjectMonitor
         selectedObject={selectedObject}
         chakra={{
-          w: '50vw',
-          maxW: '500px',
-          h: '50vw',
-          maxH: '500px',
+          w: `${rightWidth}px`,
+          h: '100%',
+          maxH: '100vh',
         }}
         onChange={handleChangeObject}
       />
