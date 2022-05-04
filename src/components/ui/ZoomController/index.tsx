@@ -2,6 +2,8 @@ import React from 'react'
 import {
   NumberInput,
   NumberInputField,
+  Text,
+  Box,
   Flex,
   FlexProps,
   IconButton,
@@ -39,25 +41,39 @@ export const ZoomController: React.FC<ZoomControllerProps> = ({
       direction={'column'}
       {...chakra}
     >
-      <NumberInput
-        value={value}
-        min={1}
-        max={MAX_VALUE}
-        order={1}
-        onChange={(value) => handleChangeInput(Number(value))}
-      >
-        <NumberInputField
-          bg={'white'}
-          w={WIDTH}
-          maxW={WIDTH}
-          h={INPUT_HEIGHT}
-          maxH={INPUT_HEIGHT}
-          p={1}
+      <Box order={1} position={'relative'}>
+        <NumberInput
+          value={value}
+          min={1}
+          max={MAX_VALUE}
+          onChange={(value) => handleChangeInput(Number(value))}
+        >
+          <NumberInputField
+            bg={'white'}
+            w={WIDTH}
+            maxW={WIDTH}
+            h={INPUT_HEIGHT}
+            maxH={INPUT_HEIGHT}
+            pt={'1'}
+            pb={'1'}
+            pl={'1'}
+            pr={'2'}
+            fontSize={'10px'}
+            textAlign={'center'}
+            borderRadius={0}
+          />
+        </NumberInput>
+        <Text
           fontSize={'10px'}
-          textAlign={'center'}
-          borderRadius={0}
-        />
-      </NumberInput>
+          lineHeight={'1'}
+          m={'auto'}
+          h={'1em'}
+          position={'absolute'}
+          top={'1px'}
+          right={'2px'}
+          bottom={'0'}
+        >%</Text>
+      </Box>
       <IconButton
         isDisabled={value >= MAX_VALUE}
         display={'block'}

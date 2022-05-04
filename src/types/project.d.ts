@@ -28,5 +28,6 @@ export type Project = {
   id: string
   createdAt: number
   perspective: number
+  zoom: number
   objects: ProjectObject[]
 }

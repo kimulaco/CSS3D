@@ -11,10 +11,9 @@ import { ProjectObject } from '../types/project'
 const rightWidth = 240
 
 const PageHome: React.FC = () => {
-  const { project, resetProject, updateObject } = useProject({
+  const { project, updateProject, resetProject, updateObject } = useProject({
     useStorage: true,
   })
-  const [zoom, setZoom] = useState<number>(100)
   const [
     selectedObject,
     setSelectedObject,
@@ -39,7 +38,7 @@ const PageHome: React.FC = () => {
         position={'relative'}
       >
         <Stage
-          zoom={zoom}
+          zoom={project.zoom}
           perspective={project.perspective}
           size={1000}
         >
@@ -66,14 +65,16 @@ const PageHome: React.FC = () => {
         />
 
         <ZoomController
-          value={zoom}
+          value={project.zoom}
           chakra={{
             position: 'absolute',
             bottom: '4',
             left: '4',
             zIndex: '0',
           }}
-          onChange={setZoom}
+          onChange={(zoomValue) => {
+            updateProject({ zoom: zoomValue })
+          }}
         />
       </Box>
 

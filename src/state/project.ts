@@ -27,6 +27,7 @@ const DEFAULT_PROJECT: Project = {
   id: 'default-project-1',
   createdAt: new Date().getTime(),
   perspective: 1000,
+  zoom: 100,
   objects: [DEFAULT_PROJECT_OBJECT],
 }
 
@@ -80,10 +81,19 @@ export const useProject = (props: UseProjectTypes) => {
   //   })
   // }
 
+  const updateProject = (projectPartials: Partial<Project>) => {
+    setProject((_project: Project) => {
+      return {
+        ..._project,
+        ...projectPartials,
+      }
+    })
+  }
+
   const updateObject = (updatedObject: ProjectObject) => {
     let isUpdatedObject = false
 
-    const projectObjects: ProjectObject[] = project.objects.map(
+    const objects: ProjectObject[] = project.objects.map(
       (object: ProjectObject) => {
         if (object.objectId === updatedObject.objectId) {
           isUpdatedObject = true
@@ -97,12 +107,7 @@ export const useProject = (props: UseProjectTypes) => {
       return
     }
 
-    setProject((project: Project) => {
-      return {
-        ...project,
-        objects: projectObjects,
-      }
-    })
+    updateProject({ objects })
   }
 
   const selectProject = useMemo<SelectProjectTypes>(() => {
@@ -154,12 +159,13 @@ export const useProject = (props: UseProjectTypes) => {
 
   return {
     project,
-    resetProject,
+    updateProject,
     // addObject,
     updateObject,
     selectProject,
     saveProject,
     removeProject,
     removeStorage,
+    resetProject,
   }
 }
