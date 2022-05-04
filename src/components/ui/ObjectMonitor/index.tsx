@@ -37,7 +37,6 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
   }
 
   const handleChangeColor = (formId: string, value: string) => {
-    console.log(formId, value)
     if (typeof onChange === 'function') {
       const updatedObject = {
         ...selectedObject,

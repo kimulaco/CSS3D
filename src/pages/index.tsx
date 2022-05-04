@@ -11,12 +11,9 @@ import { ProjectObject } from '../types/project'
 const rightWidth = 240
 
 const PageHome: React.FC = () => {
-  const {
-    project,
-    resetProject,
-    updateObject,
-    setStorage,
-  } = useProject()
+  const { project, resetProject, updateObject } = useProject({
+    useStorage: true,
+  })
   const [zoom, setZoom] = useState<number>(100)
   const [
     selectedObject,
@@ -28,11 +25,10 @@ const PageHome: React.FC = () => {
     if (updatedObject.objectId === selectedObject?.objectId) {
       setSelectedObject(updatedObject)
     }
-    setStorage()
   }
 
   const handleClickObjectReset = () => {
-    const defaultProject = resetProject()
+    const defaultProject = resetProject(project.id)
     setSelectedObject(defaultProject.objects[0])
   }
 

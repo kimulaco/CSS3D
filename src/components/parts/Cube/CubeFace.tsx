@@ -3,6 +3,8 @@ import { Flex, Text } from '@chakra-ui/react'
 import { stringifyTransform, TranformObject } from '../../../utils/transform'
 import { ProjectObjectFace } from '../../../types/project'
 
+const TRANSITIONS: string[] = ['transform', 'width', 'height']
+
 export type CubePropsOptions = ProjectObjectFace
 
 type CubeFaceProps = CubePropsOptions & {
@@ -12,8 +14,6 @@ type CubeFaceProps = CubePropsOptions & {
 }
 
 export const CubeFace: React.FC<CubeFaceProps> = (props) => {
-  const TRANSITIONS: string[] = ['transform', 'width', 'height']
-
   return (
     <Flex
       bg={props.bg || 'gray.400'}

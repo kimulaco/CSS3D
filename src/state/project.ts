@@ -1,5 +1,12 @@
+import { useMemo, useEffect } from 'react'
 import { atom, useRecoilState } from 'recoil'
 import { Project, ProjectObject } from '../types/project'
+
+type SelectProjectTypes = (projectId: Project['id']) => void
+type SaveProjectTypes = (projectId: Project['id'], newProject: Project) => void
+type RemoveProjectTypes = (projectId: Project['id']) => void
+type RemoveStorageProjectTypes = (projectId: Project['id']) => void
+type ResetProjectTypes = (projectId: Project['id']) => Project
 
 const ATOM_KEY = 'project'
 const PROJECT_ID_STORAGE_KEY = 'CSS3D_PROJECT_ID'
@@ -23,6 +30,18 @@ const DEFAULT_PROJECT: Project = {
   objects: [DEFAULT_PROJECT_OBJECT],
 }
 
+// const getProjectFromStorage = (
+//   projectId: Project['id'],
+// ): Project | undefined => {
+//   const project = localStorage.getItem(
+//     `${PROJECT_STORAGE_PREFIX}${projectId}`
+//   )
+//   if (!project) {
+//     return undefined
+//   }
+//   return JSON.parse(project) as Project
+// }
+
 const getDefaultProject = (): Project => {
   const projectId = localStorage.getItem(PROJECT_ID_STORAGE_KEY)
   if (!projectId) {
@@ -42,33 +61,24 @@ export const projectState = atom<Project>({
   default: getDefaultProject(),
 })
 
-export const useProject = () => {
+type UseProjectTypes = {
+  useStorage?: boolean
+}
+
+export const useProject = (props: UseProjectTypes) => {
   const [project, setProject] = useRecoilState<Project>(projectState);
 
-  localStorage.setItem(PROJECT_ID_STORAGE_KEY, project.id)
-
-  const getObjectById = (
-    objectId: ProjectObject['objectId'],
-  ): ProjectObject | undefined => {
-    for (const object of project.objects) {
-      if (object.objectId === objectId) {
-        return object
-      }
-    }
-    return undefined
-  }
-
-  const addObject = (newProject: ProjectObject) => {
-    setProject((project: Project) => {
-      return {
-        ...project,
-        objects: [
-          ...project.objects,
-          newProject,
-        ],
-      }
-    })
-  }
+  // const addObject = (newObject: ProjectObject) => {
+  //   setProject((project: Project) => {
+  //     return {
+  //       ...project,
+  //       objects: [
+  //         ...project.objects,
+  //         newObject,
+  //       ],
+  //     }
+  //   })
+  // }
 
   const updateObject = (updatedObject: ProjectObject) => {
     let isUpdatedObject = false
@@ -95,42 +105,61 @@ export const useProject = () => {
     })
   }
 
-  const getStorage = () => {
-    const storage = localStorage.getItem(
-      `${PROJECT_STORAGE_PREFIX}${project.id}`,
-    )
-    if (!storage) {
-      return storage
+  const selectProject = useMemo<SelectProjectTypes>(() => {
+    return (projectId) => {
+      localStorage.setItem(PROJECT_ID_STORAGE_KEY, projectId)
     }
-    return JSON.parse(storage)
-  }
+  }, [])
 
-  const setStorage = () => {
-    localStorage.setItem(
-      `${PROJECT_STORAGE_PREFIX}${project.id}`, JSON.stringify(project),
-    )
-  }
+  const saveProject = useMemo<SaveProjectTypes>(() => {
+    return (projectId, newProject) => {
+      localStorage.setItem(
+        `${PROJECT_STORAGE_PREFIX}${projectId}`, JSON.stringify(newProject),
+      )
+    }
+  }, [])
 
-  const removeStorage = () => {
-    localStorage.removeItem(`${PROJECT_STORAGE_PREFIX}${project.id}`)
-    localStorage.removeItem(PROJECT_ID_STORAGE_KEY)
-  }
+  const removeProject = useMemo<RemoveProjectTypes>(() => {
+    return (projectId) => {
+      localStorage.removeItem(`${PROJECT_STORAGE_PREFIX}${projectId}`)
+    }
+  }, [])
 
-  const resetProject = (): Project => {
-    removeStorage()
-    const defaultProject = getDefaultProject()
-    setProject(defaultProject)
-    return defaultProject
-  }
+  const removeStorage = useMemo<RemoveStorageProjectTypes>(() => {
+    return (projectId) => {
+      localStorage.removeItem(`${PROJECT_STORAGE_PREFIX}${projectId}`)
+      localStorage.removeItem(PROJECT_ID_STORAGE_KEY)
+    }
+  }, [])
+
+  const resetProject = useMemo<ResetProjectTypes>(() => {
+    return (projectId) => {
+      removeStorage(projectId)
+      const defaultProject = getDefaultProject()
+      setProject(defaultProject)
+      return defaultProject
+    }
+  }, [removeStorage, setProject])
+
+  useEffect(() => {
+    selectProject(project.id)
+  }, [
+    selectProject,
+    project.id,
+  ])
+
+  useEffect(() => {
+    saveProject(project.id, project)
+  }, [saveProject, project])
 
   return {
     project,
     resetProject,
-    getObjectById,
-    addObject,
+    // addObject,
     updateObject,
-    getStorage,
-    setStorage,
+    selectProject,
+    saveProject,
+    removeProject,
     removeStorage,
   }
 }

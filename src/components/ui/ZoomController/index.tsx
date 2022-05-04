@@ -8,6 +8,12 @@ import {
 } from '@chakra-ui/react'
 import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
 
+const WIDTH = 10
+const BUTTON_HEIGHT = 5
+const INPUT_HEIGHT = 7
+const MAX_VALUE = 500
+const MIN_VALUE = 1
+
 type ZoomControllerProps = {
   value: number
   step?: number
@@ -22,12 +28,6 @@ export const ZoomController: React.FC<ZoomControllerProps> = ({
   chakra,
   onChange,
 }) => {
-  const WIDTH = 10
-  const BUTTON_HEIGHT = 5
-  const INPUT_HEIGHT = 7
-  const MAX_VALUE = 200
-  const MIN_VALUE = 1
-
   const handleChangeInput = (value: number) => {
     if (typeof onChange === 'function') {
       onChange(value)
@@ -42,7 +42,7 @@ export const ZoomController: React.FC<ZoomControllerProps> = ({
       <NumberInput
         value={value}
         min={1}
-        max={200}
+        max={MAX_VALUE}
         order={1}
         onChange={(value) => handleChangeInput(Number(value))}
       >

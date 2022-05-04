@@ -1,19 +1,18 @@
 import { useState, useMemo, useCallback } from 'react'
-import { useDrag } from './useDrag'
+import { useDrag, UseDragProps } from './useDrag'
 import { TranformState } from './transform'
-import { log } from './logger'
 import { Offset } from '../types/'
 
-type UseRotateProps = {
+export type UseRotateProps = {
   createdAt: number
   rotateRate?: number
   defaultState?: TranformState
   onRotate?: (rotateState: TranformState) => void
+  onEndDrag?: UseDragProps['onEndDrag']
 }
 
 export const useRotate = (props: UseRotateProps) => {
   const defaultState = useMemo<Required<UseRotateProps>['defaultState']>(() => {
-    log('useRotate: defaultState')
     return props.defaultState || {}
   }, [props.defaultState])
   const rotateRate = useMemo<Required<UseRotateProps>['rotateRate']>(() => {
@@ -36,7 +35,6 @@ export const useRotate = (props: UseRotateProps) => {
   const rate: number = Math.max(rotateRate , 0)
 
   const rotate = (startOffset: Offset, moveOffset: Offset) => {
-    log('useRotate: rotate')
     const diffOffsetValue: Offset = {
       x: moveOffset.x - startOffset.x,
       y: moveOffset.y - startOffset.y,
@@ -56,6 +54,7 @@ export const useRotate = (props: UseRotateProps) => {
     onStartDrag() {
       setStartRotateState(rotateState)
     },
+    onEndDrag: props.onEndDrag,
     onMoveDrag(startOffset, moveOffset) {
       rotate(startOffset, moveOffset)
     },

@@ -46,7 +46,7 @@ export const ObjectMonitorInputColor: React.FC<
           bg={'white'}
           color={'black'}
           w={'100%'}
-          px={'1'}
+          p={'0'}
           borderRadius={'sm'}
           {...input}
           onChange={(event) => {

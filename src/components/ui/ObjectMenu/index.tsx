@@ -40,8 +40,11 @@ export const ObjectMenu: React.FC<ObjectMenuProps> = ({
           icon={<HamburgerIcon />}
           bg={'white'}
         />
-        <MenuList>
-          <MenuItem onClick={() => handleClickItem('reset')}>
+        <MenuList py={'0'} overflow={'hidden'}>
+          <MenuItem
+            fontSize={'sm'}
+            onClick={() => handleClickItem('reset')}
+          >
             Reset
           </MenuItem>
         </MenuList>

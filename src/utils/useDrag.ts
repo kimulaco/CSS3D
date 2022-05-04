@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useWindowEvent } from './useWindowEvent'
 import { Offset } from '../types/'
 
-type UseDragProps = {
+export type UseDragProps = {
   onStartDrag?: (startOffset: Offset) => void
   onMoveDrag?: (startOffset: Offset, moveOffset: Offset) => void
   onEndDrag?: (startOffset: Offset, endOffset: Offset) => void
