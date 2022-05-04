@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useWindowEvent } from './useWindowEvent'
 import { Offset } from '../types/'
 
@@ -13,41 +13,37 @@ export const useDrag = (props: UseDragProps) => {
   const [startOffset, setStartOffset] = useState<Offset>({x: 0, y: 0})
   const [moveOffset, setMoveOffset] = useState<Offset>({x: 0, y: 0})
 
-  const handleMouseMove = (event: MouseEvent) => {
-    if (!isDragging) {
-      return
+  const startDrag = useMemo<(event: MouseEvent) => Offset>(() => {
+    return (event: MouseEvent) => {
+      setIsDragging(true)
+      const startOffsetValue: Offset = {
+        x: event.pageX,
+        y: event.pageY,
+      }
+      setStartOffset(startOffsetValue)
+      return startOffsetValue
     }
-    setIsDragging(true)
-    const moveOffsetValue: Offset = {
-      x: event.pageX,
-      y: event.pageY,
-    }
-    setMoveOffset(moveOffsetValue)
-    if (props.onMoveDrag) {
-      props.onMoveDrag(startOffset, moveOffsetValue)
-    }
-  }
+  }, [setIsDragging, setStartOffset])
 
-  const startDrag = (event: MouseEvent): Offset => {
-    setIsDragging(true)
-    const startOffsetValue: Offset = {
-      x: event.pageX,
-      y: event.pageY,
+  const endDrag = useMemo<(event: MouseEvent) => Offset>(() => {
+    return (event: MouseEvent) => {
+      setIsDragging(false)
+      const endOffsetValue: Offset = {
+        x: event.pageX - startOffset.x,
+        y: event.pageY - startOffset.y,
+      }
+      return endOffsetValue
     }
-    setStartOffset(startOffsetValue)
-    return startOffsetValue
-  }
+  }, [setIsDragging, startOffset])
 
-  const endDrag = (event: MouseEvent): Offset => {
-    setIsDragging(false)
-    const endOffsetValue: Offset = {
-      x: event.pageX - startOffset.x,
-      y: event.pageY - startOffset.y,
+  const registDrag = useCallback((event: any) => {
+    const startOffset = startDrag(event)
+    if (props.onStartDrag) {
+      props.onStartDrag(startOffset)
     }
-    return endOffsetValue
-  }
+  }, [startDrag, props])
 
-  const handleMouseUp = (event: MouseEvent) => {
+  const handleMouseUp = useCallback((event: MouseEvent) => {
     if (!isDragging) {
       return
     }
@@ -55,14 +51,24 @@ export const useDrag = (props: UseDragProps) => {
     if (props.onEndDrag) {
       props.onEndDrag(startOffset, endOffsetValue)
     }
-  }
+  }, [startOffset, endDrag, isDragging, props])
 
-  const registDrag = (event: any) => {
-    const startOffset = startDrag(event)
-    if (props.onStartDrag) {
-      props.onStartDrag(startOffset)
+  const handleMouseMove = useMemo(() => {
+    return (event: MouseEvent) => {
+      if (!isDragging) {
+        return
+      }
+      setIsDragging(true)
+      const moveOffsetValue: Offset = {
+        x: event.pageX,
+        y: event.pageY,
+      }
+      setMoveOffset(moveOffsetValue)
+      if (props.onMoveDrag) {
+        props.onMoveDrag(startOffset, moveOffsetValue)
+      }
     }
-  }
+  }, [startOffset, isDragging, props])
 
   useWindowEvent('mouseup', handleMouseUp)
   useWindowEvent('mousemove', handleMouseMove)
