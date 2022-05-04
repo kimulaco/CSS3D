@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useMemo, useEffect, useCallback } from 'react'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { CubeGuide } from './CubeGuide'
 import { CubeFace } from './CubeFace'
 import { stringifyFormatTransform } from '../../../utils/transform'
 import { isNumber } from '../../../utils/number'
 import { useRotate } from '../../../utils/useRotate'
-import { ProjectObject } from '../../../types/project'
+import { log } from '../../../utils/logger'
+import { Project, ProjectObject } from '../../../types/project'
 
 type CubeProps = {
+  createdAt: Project['createdAt']
   object: ProjectObject
   enableGuide?: boolean
   chakra?: BoxProps
@@ -15,17 +17,24 @@ type CubeProps = {
 }
 
 export const Cube: React.FC<CubeProps> = ({
+  createdAt,
   object,
   enableGuide = false,
   chakra = {},
   onChangeRotate,
 }) => {
-  const { registDrag, isDragging } = useRotate({
-    defaultState: {
+  const defaultRotateState = useMemo(() => {
+    log('<Cube>: defaultRotateState')
+    return {
       rotateX: isNumber(object.rotateX) ? object.rotateX : -20,
       rotateY: isNumber(object.rotateY) ? object.rotateY : -20,
       rotateZ: 0,
-    },
+    }
+  }, [createdAt])
+
+  const { registDrag, isDragging, resetRotateState } = useRotate({
+    createdAt,
+    defaultState: defaultRotateState,
     onRotate(rotateState) {
       const updatedObject: ProjectObject = {
         ...object,
@@ -37,6 +46,14 @@ export const Cube: React.FC<CubeProps> = ({
       }
     }
   })
+
+  const resetState = useCallback(() => {
+    resetRotateState()
+  }, [resetRotateState])
+
+  useEffect(() => {
+    resetState()
+  }, [resetState])
 
   return (
     <Box

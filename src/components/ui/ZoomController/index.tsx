@@ -37,10 +37,6 @@ export const ZoomController: React.FC<ZoomControllerProps> = ({
   return (
     <Flex
       direction={'column'}
-      position={'absolute'}
-      bottom={4}
-      right={4}
-      zIndex={'0'}
       {...chakra}
     >
       <NumberInput

@@ -33,7 +33,7 @@ export const ObjectMonitorInputColor: React.FC<
       <Flex alignItems={'center'} w={'100%'}>
         <FormLabel
           htmlFor={formId}
-          minW={'56px'}
+          minW={'86px'}
           mb={'0'}
           mr={'2'}
           fontSize={'sm'}
@@ -48,7 +48,6 @@ export const ObjectMonitorInputColor: React.FC<
           w={'100%'}
           px={'1'}
           borderRadius={'sm'}
-          isFullWidth
           {...input}
           onChange={(event) => {
             const value = String(event?.target?.value || '')

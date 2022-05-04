@@ -1,11 +1,15 @@
 import React, { Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { ChakraProvider, theme, Text } from '@chakra-ui/react'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 import {
   LayoutContainer,
   LayoutHeader,
   LayoutMain,
 } from './components/ui/Layout/'
+
+const SuspenseFallback = () => {
+  return <></>
+}
 
 const PageHome = lazy(() => import(/* webpackChunkName: "home" */'./pages/'))
 
@@ -16,7 +20,7 @@ export const App = () => (
       <LayoutMain>
         <Routes>
           <Route path="/" element={
-            <Suspense fallback={<Text>Loading...</Text>}>
+            <Suspense fallback={<SuspenseFallback />}>
               <PageHome />
             </Suspense>
           } />

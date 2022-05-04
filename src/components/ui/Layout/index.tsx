@@ -18,6 +18,7 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
 }) => {
   return (
     <Flex
+      bg={'gray.800'}
       w={'100%'}
       h={'100vh'}
       minH={'100vh'}

@@ -1,19 +1,25 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useDrag } from './useDrag'
 import { TranformState } from './transform'
+import { log } from './logger'
 import { Offset } from '../types/'
 
 type UseRotateProps = {
+  createdAt: number
   rotateRate?: number
   defaultState?: TranformState
   onRotate?: (rotateState: TranformState) => void
 }
 
-export const useRotate = ({
-  rotateRate = 0.5,
-  defaultState = {},
-  onRotate,
-}: UseRotateProps) => {
+export const useRotate = (props: UseRotateProps) => {
+  const defaultState = useMemo<Required<UseRotateProps>['defaultState']>(() => {
+    log('useRotate: defaultState')
+    return props.defaultState || {}
+  }, [props.defaultState])
+  const rotateRate = useMemo<Required<UseRotateProps>['rotateRate']>(() => {
+    return props.rotateRate || 0.5
+  }, [props.rotateRate])
+
   const [
     stateRotateState,
     setStartRotateState,
@@ -27,9 +33,10 @@ export const useRotate = ({
     rotateY: 0,
     rotateZ: 0,
   }, defaultState))
-  const rate: number = Math.max(rotateRate, 0)
+  const rate: number = Math.max(rotateRate , 0)
 
   const rotate = (startOffset: Offset, moveOffset: Offset) => {
+    log('useRotate: rotate')
     const diffOffsetValue: Offset = {
       x: moveOffset.x - startOffset.x,
       y: moveOffset.y - startOffset.y,
@@ -40,8 +47,8 @@ export const useRotate = ({
       rotateZ: Number(stateRotateState.rotateZ),
     }
     setRotateState(state)
-    if (typeof onRotate === 'function') {
-      onRotate(state)
+    if (typeof props.onRotate === 'function') {
+      props.onRotate(state)
     }
   }
 
@@ -54,9 +61,27 @@ export const useRotate = ({
     },
   })
 
+  const resetRotateState = useCallback(() => {
+    setStartRotateState(Object.assign({
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+    }, defaultState))
+    setRotateState(Object.assign({
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+    }, defaultState))
+  }, [
+    setStartRotateState,
+    setRotateState,
+    defaultState,
+  ])
+
   return {
     isDragging,
     registDrag,
     rotateState,
+    resetRotateState,
   }
 }

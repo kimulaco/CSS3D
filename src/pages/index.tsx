@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
-import { Box, Flex, IconButton, useToast } from '@chakra-ui/react'
-import { AiOutlineSave } from 'react-icons/ai'
+import { Box, Flex } from '@chakra-ui/react'
 import { Stage } from '../components/parts/Stage'
 import { Cube } from '../components/parts/Cube'
 import { ZoomController } from '../components/ui/ZoomController'
+import { ObjectMenu } from '../components/ui/ObjectMenu'
 import { ObjectMonitor } from '../components/ui/ObjectMonitor'
 import { useProject } from '../state/project'
 import { ProjectObject } from '../types/project'
 
-const rightWidth = 200
+const rightWidth = 240
 
 const PageHome: React.FC = () => {
-  const toast = useToast()
-  const { project, updateObject, setStorage } = useProject()
+  const {
+    project,
+    resetProject,
+    updateObject,
+    setStorage,
+  } = useProject()
   const [zoom, setZoom] = useState<number>(100)
   const [
     selectedObject,
@@ -24,17 +28,12 @@ const PageHome: React.FC = () => {
     if (updatedObject.objectId === selectedObject?.objectId) {
       setSelectedObject(updatedObject)
     }
+    setStorage()
   }
 
-  const handleClickSaveButton = () => {
-    setStorage()
-    toast({
-      description: 'Saved',
-      status: 'success',
-      position: 'top-right',
-      duration: 3000,
-      isClosable: true,
-    })
+  const handleClickObjectReset = () => {
+    const defaultProject = resetProject()
+    setSelectedObject(defaultProject.objects[0])
   }
 
   return (
@@ -45,12 +44,14 @@ const PageHome: React.FC = () => {
       >
         <Stage
           zoom={zoom}
+          perspective={project.perspective}
           size={1000}
         >
           {project.objects.map((object: ProjectObject) => {
             return (
               <Cube
                 key={`object-${object.objectId}`}
+                createdAt={project.createdAt}
                 object={object}
                 onChangeRotate={handleChangeObject}
               />
@@ -58,23 +59,24 @@ const PageHome: React.FC = () => {
           })}
         </Stage>
 
-        <IconButton
-          aria-label="Save Project"
-          icon={<AiOutlineSave style={{
-            width: '100%',
-            height: '100%',
-            fill: 'currentcolor',
-          }} />}
-          p={2}
-          position={'absolute'}
-          top={4}
-          right={4}
-          zIndex={'0'}
-          onClick={handleClickSaveButton}
+        <ObjectMenu
+          chakra={{
+            position: 'absolute',
+            top: '4',
+            left: '4',
+            zIndex: '0',
+          }}
+          onClickReset={handleClickObjectReset}
         />
 
         <ZoomController
           value={zoom}
+          chakra={{
+            position: 'absolute',
+            bottom: '4',
+            left: '4',
+            zIndex: '0',
+          }}
           onChange={setZoom}
         />
       </Box>

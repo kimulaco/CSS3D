@@ -37,7 +37,7 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
       <Flex alignItems={'center'} w={'100%'}>
         <FormLabel
           htmlFor={formId}
-          minW={'56px'}
+          minW={'86px'}
           mb={'0'}
           mr={2}
           fontSize={'sm'}
@@ -45,7 +45,6 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
 
         <NumberInput
           size={'xs'}
-          isFullWidth
           {...input}
           onChange={(value: string) => {
             if (typeof onChange === 'function') {

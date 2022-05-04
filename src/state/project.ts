@@ -18,7 +18,8 @@ const DEFAULT_PROJECT_OBJECT: ProjectObject = {
 
 const DEFAULT_PROJECT: Project = {
   id: 'default-project-1',
-  perspective: 500,
+  createdAt: new Date().getTime(),
+  perspective: 1000,
   objects: [DEFAULT_PROJECT_OBJECT],
 }
 
@@ -60,8 +61,7 @@ export const useProject = () => {
   const addObject = (newProject: ProjectObject) => {
     setProject((project: Project) => {
       return {
-        id: project.id,
-        perspective: project.perspective,
+        ...project,
         objects: [
           ...project.objects,
           newProject,
@@ -89,15 +89,16 @@ export const useProject = () => {
 
     setProject((project: Project) => {
       return {
-        id: project.id,
-        perspective: project.perspective,
+        ...project,
         objects: projectObjects,
       }
     })
   }
 
   const getStorage = () => {
-    const storage = localStorage.getItem(`CSS3D_PROJECT_${project.id}`)
+    const storage = localStorage.getItem(
+      `${PROJECT_STORAGE_PREFIX}${project.id}`,
+    )
     if (!storage) {
       return storage
     }
@@ -105,15 +106,31 @@ export const useProject = () => {
   }
 
   const setStorage = () => {
-    localStorage.setItem(`CSS3D_PROJECT_${project.id}`, JSON.stringify(project))
+    localStorage.setItem(
+      `${PROJECT_STORAGE_PREFIX}${project.id}`, JSON.stringify(project),
+    )
+  }
+
+  const removeStorage = () => {
+    localStorage.removeItem(`${PROJECT_STORAGE_PREFIX}${project.id}`)
+    localStorage.removeItem(PROJECT_ID_STORAGE_KEY)
+  }
+
+  const resetProject = (): Project => {
+    removeStorage()
+    const defaultProject = getDefaultProject()
+    setProject(defaultProject)
+    return defaultProject
   }
 
   return {
     project,
+    resetProject,
     getObjectById,
     addObject,
     updateObject,
     getStorage,
     setStorage,
+    removeStorage,
   }
 }
