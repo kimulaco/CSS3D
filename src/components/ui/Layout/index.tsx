@@ -1,9 +1,12 @@
 import React from 'react'
 import {
+  Icon,
+  Link,
   Box,
   Flex,
   FlexProps,
 } from '@chakra-ui/react'
+import { AiFillGithub } from 'react-icons/ai'
 
 export const HEADER_HEIGHT = '50px'
 
@@ -39,6 +42,7 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
 }) => {
   return (
     <Flex
+      justifyContent={'space-between'}
       h={HEADER_HEIGHT}
       p={'2'}
       color={'white'}
@@ -55,6 +59,20 @@ export const LayoutHeader: React.FC<LayoutHeaderProps> = ({
          fontWeight={'bold'}
         >CSS3D</Flex>
       </Box>
+
+      <Flex alignItems={'center'}>
+        <Link
+          ml={'2'}
+          href="https://github.com/kimulaco/CSS3D"
+        >
+          <Icon
+            w={'30px'}
+            h={'30px'}
+            display={'block'}
+            as={AiFillGithub}
+          />
+        </Link>
+      </Flex>
     </Flex>
   )
 }

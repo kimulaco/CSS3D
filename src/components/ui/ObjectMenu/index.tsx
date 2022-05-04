@@ -7,7 +7,7 @@ import {
   MenuList,
   MenuItem,
 } from '@chakra-ui/react'
-import { HamburgerIcon } from '@chakra-ui/icons'
+import { AiOutlineEllipsis } from 'react-icons/ai'
 
 type ObjectMenuProps = {
   chakra?: BoxProps
@@ -37,7 +37,7 @@ export const ObjectMenu: React.FC<ObjectMenuProps> = ({
         <MenuButton
           as={IconButton}
           aria-label='Menu'
-          icon={<HamburgerIcon />}
+          icon={<AiOutlineEllipsis />}
           bg={'white'}
         />
         <MenuList py={'0'} overflow={'hidden'}>
