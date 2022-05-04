@@ -38,10 +38,9 @@ const PageHome: React.FC = () => {
   }
 
   return (
-    <Flex minH={'100vh'} bg={'gray.900'}>
+    <Flex w={'100%'} bg={'gray.800'}>
       <Box
         w={`calc(100% - ${rightWidth}px)`}
-        h={'100vh'}
         position={'relative'}
       >
         <Stage
@@ -85,7 +84,6 @@ const PageHome: React.FC = () => {
         chakra={{
           w: `${rightWidth}px`,
           h: '100%',
-          maxH: '100vh',
         }}
         onChange={handleChangeObject}
       />

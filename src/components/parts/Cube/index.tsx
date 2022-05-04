@@ -65,6 +65,7 @@ export const Cube: React.FC<CubeProps> = ({
       {/* front */}
       <CubeFace
         bg={object.front?.bg || object.bg}
+        borderColor={object.front?.borderColor || object.borderColor}
         text={object.front?.text}
         img={object.front?.img}
         width={object.width}
@@ -82,6 +83,7 @@ export const Cube: React.FC<CubeProps> = ({
       {/* top */}
       <CubeFace
         bg={object.top?.bg || object.bg}
+        borderColor={object.top?.borderColor || object.borderColor}
         text={object.top?.text}
         img={object.top?.img}
         width={object.width}
@@ -99,6 +101,7 @@ export const Cube: React.FC<CubeProps> = ({
       {/* right */}
       <CubeFace
         bg={object.right?.bg || object.bg}
+        borderColor={object.right?.borderColor || object.borderColor}
         text={object.right?.text}
         img={object.right?.img}
         width={object.depth}
@@ -116,6 +119,7 @@ export const Cube: React.FC<CubeProps> = ({
       {/* bottom */}
       <CubeFace
         bg={object.bottom?.bg || object.bg}
+        borderColor={object.bottom?.borderColor || object.borderColor}
         text={object.bottom?.text}
         img={object.bottom?.img}
         width={object.width}
@@ -133,6 +137,7 @@ export const Cube: React.FC<CubeProps> = ({
       {/* left */}
       <CubeFace
         bg={object.left?.bg || object.bg}
+        borderColor={object.left?.borderColor || object.borderColor}
         text={object.left?.text}
         img={object.left?.img}
         width={object.depth}
@@ -150,6 +155,7 @@ export const Cube: React.FC<CubeProps> = ({
       {/* back */}
       <CubeFace
         bg={object.back?.bg || object.bg}
+        borderColor={object.back?.borderColor || object.borderColor}
         text={object.back?.text}
         img={object.back?.img}
         width={object.width}

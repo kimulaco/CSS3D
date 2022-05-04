@@ -5,6 +5,7 @@ import {
   Heading,
 } from '@chakra-ui/react'
 import { ObjectMonitorInput } from './Input'
+import { ObjectMonitorInputColor } from './InputColor'
 import { ObjectMonitorSection } from './Section'
 import { ProjectObject } from '../../../types/project'
 
@@ -25,7 +26,18 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
     return (<></>)
   }
 
-  const handleChangeForm = (formId: string, value: number) => {
+  const handleChangeValue = (formId: string, value: number) => {
+    if (typeof onChange === 'function') {
+      const updatedObject = {
+        ...selectedObject,
+        [formId]: value,
+      }
+      onChange(updatedObject as ProjectObject)
+    }
+  }
+
+  const handleChangeColor = (formId: string, value: string) => {
+    console.log(formId, value)
     if (typeof onChange === 'function') {
       const updatedObject = {
         ...selectedObject,
@@ -39,7 +51,7 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
     <Box
       as={'form'}
       color={'white'}
-      bg="gray.900"
+      bg="gray.800"
       overflow={'auto'}
       position={'relative'}
       zIndex={'0'}
@@ -51,29 +63,6 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
       >Object Detail</Heading>
 
       <ObjectMonitorSection
-        heading={'Rotate'}
-      >
-        <ObjectMonitorInput
-          formId={'rotateX'}
-          label={'X'}
-          unit={'deg'}
-          input={{
-            value: selectedObject.rotateX,
-          }}
-          onChange={handleChangeForm}
-        />
-        <ObjectMonitorInput
-          formId={'rotateY'}
-          label={'Y'}
-          unit={'deg'}
-          input={{
-            value: selectedObject.rotateY,
-          }}
-          onChange={handleChangeForm}
-        />
-      </ObjectMonitorSection>
-
-      <ObjectMonitorSection
         heading={'Size'}
       >
         <ObjectMonitorInput
@@ -82,8 +71,9 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
           unit={'px'}
           input={{
             value: selectedObject.width,
+            min: 1,
           }}
-          onChange={handleChangeForm}
+          onChange={handleChangeValue}
         />
         <ObjectMonitorInput
           formId={'height'}
@@ -91,8 +81,9 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
           unit={'px'}
           input={{
             value: selectedObject.height,
+            min: 1,
           }}
-          onChange={handleChangeForm}
+          onChange={handleChangeValue}
         />
         <ObjectMonitorInput
           formId={'depth'}
@@ -100,8 +91,55 @@ export const ObjectMonitor: React.FC<ObjectMonitorProps> = ({
           unit={'px'}
           input={{
             value: selectedObject.depth,
+            min: 1,
           }}
-          onChange={handleChangeForm}
+          onChange={handleChangeValue}
+        />
+      </ObjectMonitorSection>
+
+      <ObjectMonitorSection
+        heading={'Color'}
+      >
+        <ObjectMonitorInputColor
+          formId={'bg'}
+          label={'Color'}
+          type={'color'}
+          input={{
+            value: selectedObject.bg,
+          }}
+          onChange={handleChangeColor}
+        />
+        <ObjectMonitorInputColor
+          formId={'borderColor'}
+          label={'Border'}
+          type={'color'}
+          input={{
+            value: selectedObject.borderColor,
+          }}
+          onChange={handleChangeColor}
+        />
+      </ObjectMonitorSection>
+
+      <ObjectMonitorSection
+        heading={'Transform'}
+      >
+        <ObjectMonitorInput
+          formId={'rotateX'}
+          label={'RotateX'}
+          unit={'deg'}
+          input={{
+            value: selectedObject.rotateX,
+          }}
+          onChange={handleChangeValue}
+        />
+        <ObjectMonitorInput
+          formId={'rotateY'}
+          label={'RotateY'}
+          unit={'deg'}
+          input={{
+            value: selectedObject.rotateY,
+          }}
+          onChange={handleChangeValue}
         />
       </ObjectMonitorSection>
     </Box>

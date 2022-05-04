@@ -7,6 +7,8 @@ const PROJECT_STORAGE_PREFIX = 'CSS3D_PROJECT_'
 
 const DEFAULT_PROJECT_OBJECT: ProjectObject = {
   objectId: 'default-object-1',
+  bg: '#a0aec0',
+  borderColor: '#718096',
   width: 100,
   height: 100,
   depth: 100,

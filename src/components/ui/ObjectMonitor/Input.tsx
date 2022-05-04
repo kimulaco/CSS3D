@@ -37,7 +37,7 @@ export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
       <Flex alignItems={'center'} w={'100%'}>
         <FormLabel
           htmlFor={formId}
-          minW={'45px'}
+          minW={'56px'}
           mb={'0'}
           mr={2}
           fontSize={'sm'}
