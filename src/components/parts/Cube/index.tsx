@@ -10,6 +10,7 @@ type CubeProps = {
   createdAt: Project['createdAt']
   object: ProjectObject
   chakra?: BoxProps
+  onClick?: (object: ProjectObject) => void
   onEndDrag?: UseRotateProps['onEndDrag']
   onChangeRotate: (updatedObject: ProjectObject) => void
 }
@@ -18,6 +19,7 @@ export const Cube: React.FC<CubeProps> = ({
   createdAt,
   object,
   chakra = {},
+  onClick,
   onChangeRotate,
   onEndDrag,
 }) => {
@@ -37,6 +39,8 @@ export const Cube: React.FC<CubeProps> = ({
         ...object,
         rotateX: Number(rotateState.rotateX),
         rotateY: Number(rotateState.rotateY),
+        translateX: Number(rotateState.translateX),
+        translateY: Number(rotateState.translateY),
       }
       if (typeof onChangeRotate === 'function') {
         onChangeRotate(updatedObject)

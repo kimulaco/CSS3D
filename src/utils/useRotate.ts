@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useDrag, UseDragProps } from './useDrag'
+import { useKey } from './useKey'
 import { TranformState } from './transform'
 import { Offset } from '../types/'
 
@@ -20,29 +21,65 @@ export const useRotate = (props: UseRotateProps) => {
   }, [props.rotateRate])
 
   const [
-    stateRotateState,
+    startRotateState,
     setStartRotateState,
   ] = useState<TranformState>(Object.assign({
     rotateX: 0,
     rotateY: 0,
     rotateZ: 0,
+    translateX: 0,
+    translateY: 0,
+    translateZ: 0,
   }, defaultState))
   const [rotateState, setRotateState] = useState<TranformState>(Object.assign({
     rotateX: 0,
     rotateY: 0,
     rotateZ: 0,
+    translateX: 0,
+    translateY: 0,
+    translateZ: 0,
   }, defaultState))
   const rate: number = Math.max(rotateRate , 0)
 
-  const rotate = (startOffset: Offset, moveOffset: Offset) => {
-    const diffOffsetValue: Offset = {
-      x: moveOffset.x - startOffset.x,
-      y: moveOffset.y - startOffset.y,
+  const { pressKey } = useKey()
+
+  const getDiffOffset = useMemo<
+    (startOffset: Offset, moveOffset: Offset) => Offset
+  >(() => {
+    return (startOffset, moveOffset) => {
+      const diffOffsetValue: Offset = {
+        x: moveOffset.x - startOffset.x,
+        y: moveOffset.y - startOffset.y,
+      }
+      return diffOffsetValue
     }
+  }, [])
+
+  const rotate = (startOffset: Offset, moveOffset: Offset) => {
+    const diffOffsetValue = getDiffOffset(startOffset, moveOffset)
     const state: TranformState = {
-      rotateX: Number(stateRotateState.rotateX) - (diffOffsetValue.y * rate),
-      rotateY: Number(stateRotateState.rotateY) + (diffOffsetValue.x * rate),
-      rotateZ: Number(stateRotateState.rotateZ),
+      rotateX: Number(startRotateState.rotateX) - (diffOffsetValue.y * rate),
+      rotateY: Number(startRotateState.rotateY) + (diffOffsetValue.x * rate),
+      rotateZ: Number(startRotateState.rotateZ),
+      translateX: rotateState.translateX,
+      translateY: rotateState.translateY,
+      translateZ: rotateState.translateZ,
+    }
+    setRotateState(state)
+    if (typeof props.onRotate === 'function') {
+      props.onRotate(state)
+    }
+  }
+
+  const translate = (startOffset: Offset, moveOffset: Offset) => {
+    const diffOffsetValue = getDiffOffset(startOffset, moveOffset)
+    const state: TranformState = {
+      rotateX: rotateState.rotateX,
+      rotateY: rotateState.rotateY,
+      rotateZ: rotateState.rotateZ,
+      translateX: Number(startRotateState.translateX) + diffOffsetValue.x,
+      translateY: Number(startRotateState.translateY) + diffOffsetValue.y,
+      translateZ: Number(startRotateState.translateZ),
     }
     setRotateState(state)
     if (typeof props.onRotate === 'function') {
@@ -56,7 +93,11 @@ export const useRotate = (props: UseRotateProps) => {
     },
     onEndDrag: props.onEndDrag,
     onMoveDrag(startOffset, moveOffset) {
-      rotate(startOffset, moveOffset)
+      if (pressKey?.shiftKey) {
+        translate(startOffset, moveOffset)
+      } else {
+        rotate(startOffset, moveOffset)
+      }
     },
   })
 
@@ -65,11 +106,17 @@ export const useRotate = (props: UseRotateProps) => {
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0,
+      translateX: 0,
+      translateY: 0,
+      translateZ: 0,
     }, defaultState))
     setRotateState(Object.assign({
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0,
+      translateX: 0,
+      translateY: 0,
+      translateZ: 0,
     }, defaultState))
   }, [
     setStartRotateState,
