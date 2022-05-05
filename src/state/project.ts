@@ -11,9 +11,10 @@ type ResetProjectTypes = (projectId: Project['id']) => Project
 const ATOM_KEY = 'project'
 const PROJECT_ID_STORAGE_KEY = 'CSS3D_PROJECT_ID'
 const PROJECT_STORAGE_PREFIX = 'CSS3D_PROJECT_'
+const OBJECT_ID_PREFIX = 'object-'
 
 const DEFAULT_PROJECT_OBJECT: ProjectObject = {
-  objectId: 'default-object-1',
+  objectId: `${OBJECT_ID_PREFIX}1`,
   bg: '#a0aec0',
   borderColor: '#718096',
   width: 100,
@@ -21,27 +22,19 @@ const DEFAULT_PROJECT_OBJECT: ProjectObject = {
   depth: 100,
   rotateX: -20,
   rotateY: -20,
+  translateX: 0,
+  translateY: 0,
+  translateZ: 0,
 }
 
 const DEFAULT_PROJECT: Project = {
-  id: 'default-project-1',
+  id: 'project-1',
   createdAt: new Date().getTime(),
   perspective: 1000,
   zoom: 100,
   objects: [DEFAULT_PROJECT_OBJECT],
+  objectCount: 1,
 }
-
-// const getProjectFromStorage = (
-//   projectId: Project['id'],
-// ): Project | undefined => {
-//   const project = localStorage.getItem(
-//     `${PROJECT_STORAGE_PREFIX}${projectId}`
-//   )
-//   if (!project) {
-//     return undefined
-//   }
-//   return JSON.parse(project) as Project
-// }
 
 const getDefaultProject = (): Project => {
   const projectId = localStorage.getItem(PROJECT_ID_STORAGE_KEY)
@@ -69,23 +62,33 @@ type UseProjectTypes = {
 export const useProject = (props: UseProjectTypes) => {
   const [project, setProject] = useRecoilState<Project>(projectState);
 
-  // const addObject = (newObject: ProjectObject) => {
-  //   setProject((project: Project) => {
-  //     return {
-  //       ...project,
-  //       objects: [
-  //         ...project.objects,
-  //         newObject,
-  //       ],
-  //     }
-  //   })
-  // }
-
   const updateProject = (projectPartials: Partial<Project>) => {
     setProject((_project: Project) => {
       return {
         ..._project,
         ...projectPartials,
+      }
+    })
+  }
+
+  const createObject = (): ProjectObject => {
+    const { objectCount } = project
+    return {
+      ...DEFAULT_PROJECT_OBJECT,
+      objectId: `${OBJECT_ID_PREFIX}${objectCount + 1}`,
+    }
+  }
+
+  const addObject = () => {
+    const newObject = createObject()
+    updateProject({ objectCount: project.objectCount + 1 })
+    setProject((project: Project) => {
+      return {
+        ...project,
+        objects: [
+          ...project.objects,
+          newObject,
+        ],
       }
     })
   }
@@ -160,7 +163,8 @@ export const useProject = (props: UseProjectTypes) => {
   return {
     project,
     updateProject,
-    // addObject,
+    createObject,
+    addObject,
     updateObject,
     selectProject,
     saveProject,

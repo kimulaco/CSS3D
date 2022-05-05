@@ -14,7 +14,7 @@ import {
   FormLabel,
 } from '@chakra-ui/react'
 
-type ObjectMonitorInputProps = {
+type ObjectControllerInputProps = {
   formId: string
   label: string
   unit?: string
@@ -24,7 +24,7 @@ type ObjectMonitorInputProps = {
   onChange?: (formId: string, value: number) => void
 }
 
-export const ObjectMonitorInput: React.FC<ObjectMonitorInputProps> = ({
+export const ObjectControllerInput: React.FC<ObjectControllerInputProps> = ({
   formId,
   label = '',
   unit = '',

@@ -14,6 +14,9 @@ export type ProjectObject = {
   depth: number
   rotateX: number
   rotateY: number
+  translateX: number
+  translateY: number
+  translateZ: number
   bg?: string,
   borderColor?: string,
   front?: ProjectObjectFace
@@ -30,4 +33,5 @@ export type Project = {
   perspective: number
   zoom: number
   objects: ProjectObject[]
+  objectCount: number
 }

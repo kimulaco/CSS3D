@@ -9,7 +9,7 @@ import {
   FormLabel,
 } from '@chakra-ui/react'
 
-type ObjectMonitorInputColorProps = {
+type ObjectControllerInputColorProps = {
   formId: string
   label: string
   type: 'text' | 'color'
@@ -19,8 +19,8 @@ type ObjectMonitorInputColorProps = {
   onChange?: (formId: string, value: string) => void
 }
 
-export const ObjectMonitorInputColor: React.FC<
-  ObjectMonitorInputColorProps
+export const ObjectControllerInputColor: React.FC<
+  ObjectControllerInputColorProps
 > = ({
   formId,
   label = '',

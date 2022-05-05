@@ -45,6 +45,21 @@ export const Cube: React.FC<CubeProps> = ({
     onEndDrag,
   })
 
+  const transformOrigin = useMemo<() => string>(() => {
+    return () => {
+      const translateX = (object.width / 2) + object.translateX
+      const translateY = (object.height / 2) + object.translateY
+      const translateZ = object.translateZ
+      return `${translateX}px ${translateY}px ${translateZ}px`
+    }
+  }, [
+    object.width,
+    object.height,
+    object.translateX,
+    object.translateY,
+    object.translateZ,
+  ])
+
   useEffect(() => {
     resetRotateState()
   }, [resetRotateState])
@@ -56,9 +71,13 @@ export const Cube: React.FC<CubeProps> = ({
       h={`${object.height}px`}
       m={'auto'}
       cursor={isDragging ? 'grabbing' : 'grab'}
+      transformOrigin={transformOrigin()}
       transform={stringifyFormatTransform({
         rotateX: object.rotateX,
         rotateY: object.rotateY,
+        translateX: object.translateX,
+        translateY: object.translateY,
+        translateZ: object.translateZ,
       })}
       position={'absolute'}
       top={'0'}

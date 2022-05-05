@@ -1,34 +1,36 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import { Stage } from '../components/parts/Stage'
 import { Cube } from '../components/parts/Cube'
 import { ZoomController } from '../components/ui/ZoomController'
 import { ObjectMenu } from '../components/ui/ObjectMenu'
-import { ObjectMonitor } from '../components/ui/ObjectMonitor'
+import { ObjectController } from '../components/ui/ObjectController'
 import { useProject } from '../state/project'
 import { ProjectObject } from '../types/project'
 
 const rightWidth = 240
 
 const PageHome: React.FC = () => {
-  const { project, updateProject, resetProject, updateObject } = useProject({
+  const {
+    project,
+    updateProject,
+    resetProject,
+    addObject,
+    updateObject,
+  } = useProject({
     useStorage: true,
   })
-  const [
-    selectedObject,
-    setSelectedObject,
-  ] = useState<ProjectObject | undefined>(project.objects[0])
 
   const handleChangeObject = (updatedObject: ProjectObject) => {
     updateObject(updatedObject)
-    if (updatedObject.objectId === selectedObject?.objectId) {
-      setSelectedObject(updatedObject)
-    }
+  }
+
+  const handleClickAddObject = () => {
+    addObject()
   }
 
   const handleClickObjectReset = () => {
-    const defaultProject = resetProject(project.id)
-    setSelectedObject(defaultProject.objects[0])
+    resetProject(project.id)
   }
 
   return (
@@ -61,6 +63,7 @@ const PageHome: React.FC = () => {
             left: '4',
             zIndex: '0',
           }}
+          onClickAddObject={handleClickAddObject}
           onClickReset={handleClickObjectReset}
         />
 
@@ -78,14 +81,20 @@ const PageHome: React.FC = () => {
         />
       </Box>
 
-      <ObjectMonitor
-        selectedObject={selectedObject}
-        chakra={{
-          w: `${rightWidth}px`,
-          h: '100%',
-        }}
-        onChange={handleChangeObject}
-      />
+      <Box
+        color={'white'}
+        w={`${rightWidth}px`}
+        h={'100%'}
+        bg="gray.800"
+        overflow={'auto'}
+        position={'relative'}
+        zIndex={'0'}
+      >
+        <ObjectController
+          objects={project.objects}
+          onChange={handleChangeObject}
+        />
+      </Box>
     </Flex>
   )
 }

@@ -1,12 +1,12 @@
 import { Box, BoxProps, Heading } from '@chakra-ui/react'
 
-type ObjectMonitorSectionProps = {
+type ObjectControllerSectionProps = {
   heading: string
   children?: React.ReactNode
   chakra?: BoxProps
 }
 
-export const ObjectMonitorSection: React.FC<ObjectMonitorSectionProps> = ({
+export const ObjectControllerSection: React.FC<ObjectControllerSectionProps> = ({
   heading,
   children,
   chakra,
@@ -17,13 +17,18 @@ export const ObjectMonitorSection: React.FC<ObjectMonitorSectionProps> = ({
     pb={'4'}
     _first={{
       mt: '0',
+      pt: '0',
       borderTop: '0',
+    }}
+    _last={{
+      pb: '0',
     }}
   >
     <Heading
-      as={'h3'}
+      as={'h4'}
       size={'xs'}
-      p={'2'}
+      px={'2'}
+      py={'1'}
     >{heading}</Heading>
     <Box px={'3'}>
       {children}
