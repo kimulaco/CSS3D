@@ -16,7 +16,10 @@ type ObjectControllerProps = {
   objects: ProjectObject[]
   children?: React.ReactNode
   chakra?: BoxProps
-  onChange?: (updatedProject: ProjectObject) => void
+  onChange?: (
+    objectId: ProjectObject['objectId'],
+    updatedObject: ProjectObject,
+  ) => void
 }
 
 export const ObjectController: React.FC<ObjectControllerProps> = ({
@@ -44,7 +47,7 @@ export const ObjectController: React.FC<ObjectControllerProps> = ({
         {objects.map((object: ProjectObject) => {
           return (
             <AccordionItem
-              key={`ObjectController_${object.objectId}`}
+              key={`ObjectController_${object.uid}`}
               borderColor={'gray.700'}
             >
               <Heading as={'h3'}>

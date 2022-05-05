@@ -1,9 +1,7 @@
 import React from 'react'
-import {
-  Box,
-  BoxProps,
-} from '@chakra-ui/react'
-import { ObjectControllerInput } from './Input'
+import { Box, BoxProps } from '@chakra-ui/react'
+import { ObjectControllerInputText } from './InputText'
+import { ObjectControllerInputNumber } from './InputNumber'
 import { ObjectControllerInputColor } from './InputColor'
 import { ObjectControllerSection } from './Section'
 import { ProjectObject } from '../../../types/project'
@@ -11,7 +9,10 @@ import { ProjectObject } from '../../../types/project'
 type ObjectControllerItemProps = {
   object: ProjectObject
   chakra?: BoxProps
-  onChange?: (updatedProject: ProjectObject) => void
+  onChange?: (
+    objectId: ProjectObject['objectId'],
+    updatedObject: ProjectObject,
+  ) => void
 }
 
 export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
@@ -25,16 +26,41 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
         ...object,
         [formId]: value,
       }
-      onChange(updatedObject as ProjectObject)
+      onChange(object.objectId, updatedObject as ProjectObject)
     }
   }
 
   return (
     <Box {...chakra}>
       <ObjectControllerSection
+        heading={'Info'}
+      >
+        <ObjectControllerInputText
+          formId={'objectId'}
+          label={'ID'}
+          unit={''}
+          input={{
+            value: object.objectId,
+            min: 1,
+          }}
+          onChange={handleChangeValue}
+        />
+        <ObjectControllerInputNumber
+          formId={'zIndex'}
+          label={'zIndex'}
+          unit={''}
+          input={{
+            value: object.zIndex,
+            min: 0,
+          }}
+          onChange={handleChangeValue}
+        />
+      </ObjectControllerSection>
+
+      <ObjectControllerSection
         heading={'Size'}
       >
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'width'}
           label={'Width'}
           unit={'px'}
@@ -44,7 +70,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
           }}
           onChange={handleChangeValue}
         />
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'height'}
           label={'Height'}
           unit={'px'}
@@ -54,7 +80,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
           }}
           onChange={handleChangeValue}
         />
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'depth'}
           label={'Depth'}
           unit={'px'}
@@ -92,7 +118,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
       <ObjectControllerSection
         heading={'Transform'}
       >
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'rotateX'}
           label={'RotateX'}
           unit={'deg'}
@@ -101,7 +127,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
           }}
           onChange={handleChangeValue}
         />
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'rotateY'}
           label={'RotateY'}
           unit={'deg'}
@@ -110,7 +136,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
           }}
           onChange={handleChangeValue}
         />
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'translateX'}
           label={'TranslateX'}
           unit={'px'}
@@ -119,7 +145,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
           }}
           onChange={handleChangeValue}
         />
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'translateY'}
           label={'TranslateY'}
           unit={'px'}
@@ -128,7 +154,7 @@ export const ObjectControllerItem: React.FC<ObjectControllerItemProps> = ({
           }}
           onChange={handleChangeValue}
         />
-        <ObjectControllerInput
+        <ObjectControllerInputNumber
           formId={'translateZ'}
           label={'TranslateZ'}
           unit={'px'}

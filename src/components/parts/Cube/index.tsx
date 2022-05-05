@@ -4,19 +4,20 @@ import { CubeFace } from './CubeFace'
 import { stringifyFormatTransform } from '../../../utils/transform'
 import { isNumber } from '../../../utils/number'
 import { useRotate, UseRotateProps } from '../../../utils/useRotate'
-import { Project, ProjectObject } from '../../../types/project'
+import { ProjectObject } from '../../../types/project'
 
 type CubeProps = {
-  createdAt: Project['createdAt']
   object: ProjectObject
   chakra?: BoxProps
   onClick?: (object: ProjectObject) => void
   onEndDrag?: UseRotateProps['onEndDrag']
-  onChangeRotate: (updatedObject: ProjectObject) => void
+  onChangeRotate: (
+    objectId: ProjectObject['objectId'],
+    updatedObject: ProjectObject,
+  ) => void
 }
 
 export const Cube: React.FC<CubeProps> = ({
-  createdAt,
   object,
   chakra = {},
   onClick,
@@ -29,10 +30,9 @@ export const Cube: React.FC<CubeProps> = ({
       rotateY: isNumber(object.rotateY) ? object.rotateY : -20,
       rotateZ: 0,
     }
-  }, [createdAt]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [object.uid]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { registDrag, isDragging, resetRotateState } = useRotate({
-    createdAt,
     defaultState: defaultRotateState,
     onRotate(rotateState) {
       const updatedObject: ProjectObject = {
@@ -43,7 +43,7 @@ export const Cube: React.FC<CubeProps> = ({
         translateY: Number(rotateState.translateY),
       }
       if (typeof onChangeRotate === 'function') {
-        onChangeRotate(updatedObject)
+        onChangeRotate(object.objectId, updatedObject)
       }
     },
     onEndDrag,
@@ -88,7 +88,7 @@ export const Cube: React.FC<CubeProps> = ({
       right={'0'}
       bottom={'0'}
       left={'0'}
-      zIndex={10}
+      zIndex={object.zIndex || 0}
       willChange="transform"
       style={{
         transformStyle: 'preserve-3d',

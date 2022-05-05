@@ -5,7 +5,6 @@ import { TranformState } from './transform'
 import { Offset } from '../types/'
 
 export type UseRotateProps = {
-  createdAt: number
   rotateRate?: number
   defaultState?: TranformState
   onRotate?: (rotateState: TranformState) => void

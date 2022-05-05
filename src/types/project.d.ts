@@ -8,6 +8,7 @@ export type ProjectObjectFace = {
 }
 
 export type ProjectObject = {
+  uid: string
   objectId: string
   width: number
   height: number
@@ -17,6 +18,7 @@ export type ProjectObject = {
   translateX: number
   translateY: number
   translateZ: number
+  zIndex: number
   bg?: string,
   borderColor?: string,
   front?: ProjectObjectFace

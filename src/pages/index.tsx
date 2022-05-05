@@ -21,8 +21,11 @@ const PageHome: React.FC = () => {
     useStorage: true,
   })
 
-  const handleChangeObject = (updatedObject: ProjectObject) => {
-    updateObject(updatedObject)
+  const handleChangeObject = (
+    objectId: ProjectObject['objectId'],
+    updatedObject: ProjectObject,
+  ) => {
+    updateObject(objectId, updatedObject)
   }
 
   const handleClickAddObject = () => {
@@ -47,8 +50,7 @@ const PageHome: React.FC = () => {
           {project.objects.map((object: ProjectObject) => {
             return (
               <Cube
-                key={`object-${object.objectId}`}
-                createdAt={project.createdAt}
+                key={`object-${object.uid}`}
                 object={object}
                 onChangeRotate={handleChangeObject}
               />

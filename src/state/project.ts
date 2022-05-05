@@ -1,5 +1,6 @@
 import { useMemo, useEffect } from 'react'
 import { atom, useRecoilState } from 'recoil'
+import { generateUid } from '../utils/uid'
 import { Project, ProjectObject } from '../types/project'
 
 type SelectProjectTypes = (projectId: Project['id']) => void
@@ -14,6 +15,7 @@ const PROJECT_STORAGE_PREFIX = 'CSS3D_PROJECT_'
 const OBJECT_ID_PREFIX = 'object-'
 
 const DEFAULT_PROJECT_OBJECT: ProjectObject = {
+  uid: generateUid(),
   objectId: `${OBJECT_ID_PREFIX}1`,
   bg: '#a0aec0',
   borderColor: '#718096',
@@ -25,6 +27,7 @@ const DEFAULT_PROJECT_OBJECT: ProjectObject = {
   translateX: 0,
   translateY: 0,
   translateZ: 0,
+  zIndex: 0,
 }
 
 const DEFAULT_PROJECT: Project = {
@@ -76,6 +79,7 @@ export const useProject = (props: UseProjectTypes) => {
     return {
       ...DEFAULT_PROJECT_OBJECT,
       objectId: `${OBJECT_ID_PREFIX}${objectCount + 1}`,
+      uid: generateUid(),
     }
   }
 
@@ -93,12 +97,15 @@ export const useProject = (props: UseProjectTypes) => {
     })
   }
 
-  const updateObject = (updatedObject: ProjectObject) => {
+  const updateObject = (
+    objectId: ProjectObject['objectId'],
+    updatedObject: ProjectObject,
+  ) => {
     let isUpdatedObject = false
 
     const objects: ProjectObject[] = project.objects.map(
       (object: ProjectObject) => {
-        if (object.objectId === updatedObject.objectId) {
+        if (object.objectId === objectId) {
           isUpdatedObject = true
           return updatedObject
         }

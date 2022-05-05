@@ -1,15 +1,20 @@
-# CSS3D
-
-https://css3d-kimulaco.vercel.app/
+# [CSS3D](https://css3d.kimulaco.com/)
 
 Web app that can move 3D cube made with CSS.
 
 ## Development
 
 ```bash
-npm run start
+# Setup
+nvm use
+npm install
 
+# Develop
+npm run dev
+
+# Build
 npm run build
 
-npm run dev
+# Launch production server
+npm run start
 ```
